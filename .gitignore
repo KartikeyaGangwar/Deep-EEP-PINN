@@ -18,9 +18,10 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-# Personal Research Notes & University Proposals (Excluded from public repo)
+# Personal Research Notes, Manuscripts & Proposals (Excluded from public repo)
 notes/
 research_proposal/
+manuscript/
 
 # Archives & Temporary Caches
 *.zip
