@@ -235,3 +235,21 @@ Therefore, $\mathbf{e_\theta(\mathbf{S}, T) \equiv 0}$ strictly by mathematical 
 8. **Raissi, M., Perdikaris, P., & Karniadakis, G. E. (2019).** *Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations*. Journal of Computational Physics, 378, 686-707.
 9. **Cuomo, S., Di Cola, V. S., Giampaolo, F., Rozza, G., Raissi, M., & Piccialli, F. (2022).** *Scientific Machine Learning through Physics-Informed Neural Networks: Where we are and What’s next*. Journal of Scientific Computing, 92(3), 88.
 10. **Cryer, C. W. (1971).** *The Solution of a Quadratic Programming Problem using Systematic Overrelaxation*. SIAM Journal on Control, 9(3), 385-392.
+
+---
+
+## Author & Citation
+
+* **Author:** Kartikey Singh
+* **Affiliation:** Department of Mathematics, University of Delhi, Delhi, India
+* **Email:** [kartikeysingh525@protonmail.com](mailto:kartikeysingh525@protonmail.com)
+* **Repository:** [https://github.com/KartikeyaGangwar/Deep-EEP-PINN](https://github.com/KartikeyaGangwar/Deep-EEP-PINN)
+
+```bibtex
+@article{singh2026deep,
+  title={Deep Early-Exercise Premium Physics-Informed Neural Networks (Deep-EEP-PINN): High-Dimensional American Basket Option Free-Boundary Valuation up to 50 Dimensions},
+  author={Singh, Kartikey},
+  journal={arXiv preprint},
+  year={2026}
+}
+```
