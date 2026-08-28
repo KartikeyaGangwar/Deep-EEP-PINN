@@ -7,7 +7,7 @@
 
 ---
 
-## 📑 Table of Contents
+## Table of Contents
 1. [Executive Summary & Core Novelty](#1-executive-summary--core-novelty)
 2. [Mathematical Foundations & PDE Derivations](#2-mathematical-foundations--pde-derivations)
    - [Asset Dynamics & Itô's Lemma](#asset-dynamics--itôs-lemma)
@@ -29,10 +29,13 @@
    - [The Non-Lognormal Sum Problem](#the-non-lognormal-sum-problem)
    - [Gentle (1993) / Milevsky-Posner (1998) Moment-Matching Derivation](#gentle-1993--milevsky-posner-1998-moment-matching-derivation)
    - [Exact Analytical Anchor & Zero-Kink Theorem Preservation](#exact-analytical-anchor--zero-kink-theorem-preservation)
-8. [Comprehensive 3-Tier Master Quantitative Benchmarks](#8-comprehensive-3-tier-master-quantitative-benchmarks)
+8. [Comprehensive Master Quantitative Benchmarks](#8-comprehensive-master-quantitative-benchmarks)
    - [Phase 1: 1D American Option Results](#phase-1-1d-american-option-results)
    - [Phase 2A: 5-Asset Geometric Basket Results](#phase-2a-5-asset-geometric-basket-results)
    - [Phase 2B: 5-Asset Real-World Arithmetic Basket Results](#phase-2b-5-asset-real-world-arithmetic-basket-results)
+   - [Phase 3: 10-Asset High-Dimensional Basket Results](#phase-3-10-asset-high-dimensional-basket-results)
+   - [Scalability Suite: 30D Dow Jones Results](#scalability-suite-30-asset-dow-jones-results)
+   - [Scalability Suite: 50D Nifty 50 Results](#scalability-suite-50-asset-nifty-50-results)
 9. [Academic References & Literature Citations](#9-academic-references--literature-citations)
 
 ---
@@ -41,13 +44,13 @@
 
 American option pricing represents a classic **parabolic free-boundary obstacle problem** in applied mathematics. Unlike European options which possess exact closed-form formulas (Black-Scholes 1973), American options allow early exercise at any time $t \in [0, T]$, requiring the simultaneous computation of the option price manifold $V(\mathbf{S}, t)$ and the optimal moving exercise boundary $\mathbf{S}^*(t)$.
 
-### Key Empirical Achievements Across All Tiers:
-* 🎯 **1D Single Stock Free-Boundary:** Relative $L_2$ Error dropped to **$0.37\%$**, Max Error = **₹0.43**, MAE = **₹0.08 (8 paise)** ($97.1\times$ faster than Crank-Nicolson PSOR).
-* 🌌 **5D Correlated Geometric Basket ($d=5$):** Broke the **Curse of Dimensionality** ($300^5 = 2.43\text{ Trillion}$ grid nodes) with **$2712.2\times$ speedup** over 100,000-path Longstaff-Schwartz Monte Carlo.
-* 💼 **5D Real-World Arithmetic Basket ($d=5$):** Solved the actual contract traded on Wall Street / NSE with payoff $\max(K - \sum w_i S_i, 0)$ with a Mean Absolute Difference of just **₹0.07 (7 paise!)** and **$1010.0\times$ speedup** over 100,000-path Arithmetic Monte Carlo.
-* 🚀 **10D High-Dimensional Basket ($d=10$):** Solved 45 pairwise correlation PDE space in $3.47\text{ ms}$ (**$6882.6\times$ speedup** over 100,000-path LSM).
-* 🏛️ **30D Dow Jones Scale Basket ($d=30$):** Solved 435 correlation pairs in $3.26\text{ ms}$ (**$62,842.1\times$ speedup** over 100,000-path LSM).
-* 📈 **50D Nifty 50 Scale Basket ($d=50$):** Solved 1,225 correlation pairs in $3.94\text{ ms}$ (**$176,760.1\times$ speedup** over 100,000-path LSM) with zero OOM.
+### Key Empirical Achievements:
+* **1D Single Stock Free-Boundary:** Relative $L_2$ Error reduced to **$0.37\%$**, Max Error = **₹0.43**, MAE = **₹0.08 (8 paise)** ($97.1\times$ faster than Crank-Nicolson PSOR).
+* **5D Correlated Geometric Basket ($d=5$):** Overcomes the Curse of Dimensionality ($300^5 = 2.43\text{ Trillion}$ grid nodes) with **$2712.2\times$ speedup** over 100,000-path Longstaff-Schwartz Monte Carlo.
+* **5D Real-World Arithmetic Basket ($d=5$):** Solved exchange-traded arithmetic average payoff $\max(K - \sum w_i S_i, 0)$ with a Mean Absolute Difference of **₹0.07 (7 paise)** and **$1010.0\times$ speedup** over 100,000-path Arithmetic Monte Carlo.
+* **10D High-Dimensional Basket ($d=10$):** Solved 45 pairwise correlation PDE space in $3.47\text{ ms}$ (**$6882.6\times$ speedup** over 100,000-path LSM).
+* **30D Dow Jones Scale Basket ($d=30$):** Solved 435 correlation pairs in $3.26\text{ ms}$ (**$62,842.1\times$ speedup** over 100,000-path LSM).
+* **50D Nifty 50 Scale Basket ($d=50$):** Solved 1,225 correlation pairs in $3.94\text{ ms}$ (**$176,760.1\times$ speedup** over 100,000-path LSM) with zero OOM.
 
 ---
 

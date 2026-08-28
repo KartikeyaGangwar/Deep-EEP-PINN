@@ -1,11 +1,11 @@
-# Python bytecode & caches
+# Python bytecode & runtime caches
 __pycache__/
 *.py[cod]
 *$py.class
 .pytest_cache/
 .ipynb_checkpoints/
 
-# LaTeX build artifacts (keep PDFs, ignore auxiliary files)
+# LaTeX build artifacts
 *.aux
 *.log
 *.out
@@ -18,9 +18,12 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
+# Personal Research Notes & University Proposals (Excluded from public repo)
+notes/
+research_proposal/
+
 # Archives & Temporary Caches
 *.zip
 *.tar.gz
 .system_generated/
 scratch/
-
