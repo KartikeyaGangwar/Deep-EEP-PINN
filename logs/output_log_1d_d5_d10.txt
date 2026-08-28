@@ -1,0 +1,204 @@
+==========================================================================================
+      DEEP EARLY EXERCISE PREMIUM PINN (EEP-PINN) MASTER BENCHMARK SUITE
+==========================================================================================
+>> Host OS          : Linux 6.12.90+
+>> CPU Processor    : Intel(R) Xeon(R) CPU @ 2.00GHz
+>> CPU Logical Cores: 4 Threads | System RAM: 31.3 GB
+>> Execution Device : CUDA
+>> GPU Device Name  : Tesla P100-PCIE-16GB (15.9 GB VRAM)
+>> CUDA Version     : 12.6 | PyTorch: 2.7.1+cu126
+==========================================================================================
+>> [Memory Cleanup] Cleared PyTorch CUDA cache. (Allocated: 0.00 GB | Reserved: 0.00 GB)
+
+
+##########################################################################################
+   [STAGE 1/4] 1D AMERICAN OPTION FREE-BOUNDARY PROBLEM
+##########################################################################################
+================================================================================
+  PHASE 1 RESEARCH BENCHMARK: 1D AMERICAN OPTION FREE-BOUNDARY PROBLEM
+================================================================================
+>> Environment: PyTorch 2.7.1+cu126 | Device: CUDA
+>> Parameters : Strike K=100.0, Expiry T=1.0y, Rate r=0.05, Vol sigma=0.2
+>> Optimizer  : AdamW (2000 eps) + L-BFGS (300 iters)
+
+--------------------------------------------------------------------------------
+[1/3] Solving via Classical Crank-Nicolson PSOR (Ground Truth Benchmark)...
+      PSOR Completed in 1115.94 ms
+
+--------------------------------------------------------------------------------
+[2/3] Training Standard Single-Network Penalty PINN (Baseline)...
+      Baseline PINN Completed in 23.73s | Latency: 7.98 ms
+
+--------------------------------------------------------------------------------
+[3/3] Training Novel EEP-PINN (Early Exercise Premium Decomposition Solver)...
+      Novel EEP-PINN Completed in 24.50s | Latency: 11.79 ms
+      >> Learned Dynamic Precision: PDE=2.53, Obstacle=2.68, BC0=2.60
+
+================================================================================
+                    QUANTITATIVE BENCHMARK REPORT
+================================================================================
+Model Architecture             | Rel. L2 Error | Max Error   | MAE        | Boundary RMSE  | Eval Latency
+---------------------------------------------------------------------------------------------------------
+Baseline PINN (Standard)       |        1.12% | Rs.    2.60 | Rs.   0.21 | Rs.       5.65 |      7.98 ms
+Novel EEP-PINN (Proposed)      |        0.37% | Rs.    0.44 | Rs.   0.08 | Rs.       2.99 |     11.79 ms
+================================================================================
+
+>> Generating High-Resolution Publication Figures & LaTeX Table...
+>> Saved 3D Surface Figure to: figures/phase1_1d_option_price_surface_3d.png
+>> Saved Free Boundary Figure to: figures/phase1_1d_free_boundary_comparison.png
+>> Saved Greeks Figure to: figures/phase1_1d_greeks_comparison.png
+>> Saved LaTeX Table to: figures/phase1_1d_benchmark_summary_table.tex
+>> [CSV Export] Saved 1D benchmark table to: results/phase1_1d_results.csv
+>> [JSON Export] Saved structured metrics to: results/benchmark_results.json
+
+>> All Phase 1 Deliverables (Figures, LaTeX, CSV, JSON) Generated Successfully!
+>> [Memory Cleanup] Cleared PyTorch CUDA cache. (Allocated: 0.02 GB | Reserved: 0.04 GB)
+>> [Memory Cleanup] Cleared PyTorch CUDA cache. (Allocated: 0.02 GB | Reserved: 0.04 GB)
+
+
+##########################################################################################
+   [STAGE 2/4] 5-ASSET CORRELATED GEOMETRIC BASKET OPTION (d=5)
+##########################################################################################
+=====================================================================================
+   PHASE 2 RESEARCH BENCHMARK: 5-ASSET AMERICAN BASKET OPTION (100k LSM paths)
+=====================================================================================
+>> Environment    : PyTorch 2.7.1+cu126 | Device: CUDA
+>> Basket Specs   : 5 Correlated Assets | Strike K=100.0, Expiry T=1.0y, Rate r=0.05
+>> Asset Vols     : [0.2, 0.22, 0.18, 0.25, 0.2]
+>> Cross-Corr rho : 0.4
+>> Optimizer      : AdamW (2500 eps) + L-BFGS (300 iters)
+
+-------------------------------------------------------------------------------------
+[1/2] Training Novel Multi-Asset EEP-PINN on GPU...
+>> [Multi-Asset EEP-PINN] Training d=5 Basket Model on CUDA...
+   [EEP-PINN d=5 Epoch  500] Loss: 3.2619e-02
+   [EEP-PINN d=5 Epoch 1000] Loss: -3.5521e-01
+   [EEP-PINN d=5 Epoch 1500] Loss: -6.9183e-01
+   [EEP-PINN d=5 Epoch 2000] Loss: -8.7938e-01
+   [EEP-PINN d=5 Epoch 2500] Loss: -9.1536e-01
+   [Multi-Asset EEP-PINN Completed in 113.56s]
+
+-------------------------------------------------------------------------------------
+[2/2] Evaluating Multi-Asset Ground Truth (LSM 100,000 paths) vs. Novel EEP-PINN...
+
+=====================================================================================
+Spot S_0   | European Exact  | LSM Ground Truth (100k)   | Novel EEP-PINN   | Diff vs LSM 
+-------------------------------------------------------------------------------------
+Rs. 80.0   | Rs.       16.70 | Rs.   19.96 +/- 0.00  (13959.3ms) | Rs.      19.86 (3.63ms) | Rs.     0.10
+Rs. 90.0   | Rs.        9.13 | Rs.   10.47 +/- 0.02  (12724.3ms) | Rs.      10.37 (3.39ms) | Rs.     0.10
+Rs. 100.0  | Rs.        4.16 | Rs.    4.57 +/- 0.02  (8759.2ms) | Rs.       4.53 (3.00ms) | Rs.     0.04
+Rs. 110.0  | Rs.        1.58 | Rs.    1.71 +/- 0.01  (5498.5ms) | Rs.       1.66 (3.26ms) | Rs.     0.05
+Rs. 120.0  | Rs.        0.52 | Rs.    0.54 +/- 0.01  (4288.2ms) | Rs.       0.53 (3.34ms) | Rs.     0.01
+=====================================================================================
+
+>> Computing 5D Early-Exercise Premium Manifold Slice for Publication...
+
+>> Generating High-Resolution Phase 2A Publication Figures & LaTeX Table...
+>> Saved Multi-Asset Pricing Figure to: figures/phase2a_5d_geom_pricing_comparison.png
+>> Saved Multi-Asset Premium Slice to: figures/phase2a_5d_geom_premium_surface_slice.png
+>> Saved Multi-Asset LaTeX Table to: figures/phase2a_5d_geom_benchmark_summary_table.tex
+>> [CSV Export] Saved multi-asset table to: results/phase2a_5d_geometric_results.csv
+>> [JSON Export] Saved structured metrics to: results/benchmark_results.json
+>> All Phase 2 Deliverables (Figures, LaTeX, CSV, JSON) Generated Successfully!
+>> [Memory Cleanup] Cleared PyTorch CUDA cache. (Allocated: 0.02 GB | Reserved: 0.04 GB)
+>> [Memory Cleanup] Cleared PyTorch CUDA cache. (Allocated: 0.02 GB | Reserved: 0.04 GB)
+
+
+##########################################################################################
+   [STAGE 3/4] 5-ASSET CORRELATED REAL-WORLD ARITHMETIC BASKET OPTION (d=5)
+##########################################################################################
+==========================================================================================
+   AMERICAN ARITHMETIC BASKET OPTION BENCHMARK (d=5, 100k LSM paths)
+==========================================================================================
+>> Environment    : PyTorch 2.7.1+cu126 | Device: CUDA
+>> Basket Specs   : 5 Correlated Assets | Strike K=100.0, Expiry T=1.0y, Rate r=0.05
+>> Asset Vols     : [0.2, 0.22, 0.18, 0.25, 0.2]
+>> Cross-Corr rho : 0.4
+>> Payoff Type    : Arithmetic max(K - sum(w_i S_i), 0)
+>> Optimizer      : AdamW (2500 eps) + L-BFGS (300 iters)
+
+------------------------------------------------------------------------------------------
+[1/2] Training Novel Arithmetic Multi-Asset EEP-PINN on GPU...
+>> [Arithmetic EEP-PINN] Training d=5 Basket Model on CUDA...
+   [Arithmetic EEP-PINN Epoch  500] Loss: -3.8366e-01
+   [Arithmetic EEP-PINN Epoch 1000] Loss: -8.5895e-01
+   [Arithmetic EEP-PINN Epoch 1500] Loss: -1.1321e+00
+   [Arithmetic EEP-PINN Epoch 2000] Loss: -1.2452e+00
+   [Arithmetic EEP-PINN Epoch 2500] Loss: -1.2666e+00
+   [Arithmetic EEP-PINN Completed in 119.32s]
+
+------------------------------------------------------------------------------------------
+[2/2] Evaluating Arithmetic Ground Truth (LSM 100,000 paths) vs. Novel Arithmetic EEP-PINN...
+
+==========================================================================================
+Spot S_0   | European Arith MM  | Arithmetic LSM (100k)     | Arith EEP-PINN   | Diff vs LSM 
+------------------------------------------------------------------------------------------
+Rs. 80.0   | Rs.          15.96 | Rs.   19.95 +/- 0.00  (11944.3ms) | Rs.      19.79 (8.26ms) | Rs.     0.16
+Rs. 90.0   | Rs.           8.53 | Rs.   10.30 +/- 0.02  (10619.1ms) | Rs.      10.15 (7.01ms) | Rs.     0.15
+Rs. 100.0  | Rs.           3.78 | Rs.    4.28 +/- 0.02  (7141.6ms) | Rs.       4.24 (7.66ms) | Rs.     0.04
+Rs. 110.0  | Rs.           1.40 | Rs.    1.53 +/- 0.01  (4333.2ms) | Rs.       1.52 (7.67ms) | Rs.     0.01
+Rs. 120.0  | Rs.           0.44 | Rs.    0.47 +/- 0.01  (3456.2ms) | Rs.       0.47 (6.76ms) | Rs.     0.00
+==========================================================================================
+
+>> Computing 5D Arithmetic Early-Exercise Premium Manifold Slice...
+
+>> Generating High-Resolution Phase 2B Arithmetic Publication Figures & LaTeX Table...
+>> Saved Arithmetic Pricing Figure to: figures/phase2b_5d_arith_pricing_comparison.png
+>> Saved Arithmetic Premium Slice to: figures/phase2b_5d_arith_premium_surface_slice.png
+>> Saved Arithmetic LaTeX Table to: figures/phase2b_5d_arith_benchmark_summary_table.tex
+>> [CSV Export] Saved multi-asset table to: results/phase2b_5d_arithmetic_results.csv
+>> [JSON Export] Saved structured metrics to: results/benchmark_results.json
+>> All Phase 2B Deliverables (Figures, LaTeX, CSV, JSON) Generated Successfully!
+>> [Memory Cleanup] Cleared PyTorch CUDA cache. (Allocated: 0.02 GB | Reserved: 0.04 GB)
+>> [Memory Cleanup] Cleared PyTorch CUDA cache. (Allocated: 0.02 GB | Reserved: 0.04 GB)
+
+
+##########################################################################################
+   [STAGE 4/4] 10-ASSET HIGH-DIMENSIONAL CORRELATED BASKET BENCHMARK (d=10)
+##########################################################################################
+=====================================================================================
+   INSTITUTIONAL 10-ASSET AMERICAN BASKET OPTION BENCHMARK (d=10, 100k LSM paths)
+=====================================================================================
+>> Environment    : PyTorch 2.7.1+cu126 | Device: CUDA
+>> Basket Specs   : 10 Correlated Assets | Strike K=100.0, Expiry T=1.0y, Rate r=0.05
+>> Asset Vols     : [0.2, 0.22, 0.18, 0.25, 0.21, 0.19, 0.23, 0.24, 0.17, 0.2]
+>> Cross-Corr rho : 0.35
+>> Optimizer      : AdamW (1200 eps) + L-BFGS (50 iters)
+
+-------------------------------------------------------------------------------------
+[1/2] Training Novel Multi-Asset EEP-PINN on GPU...
+>> [Multi-Asset EEP-PINN] Training d=10 Basket Model on CUDA...
+   [EEP-PINN d=10 Epoch  500] Loss: 1.4296e-01
+   [EEP-PINN d=10 Epoch 1000] Loss: -5.0286e-02
+   [EEP-PINN d=10 Epoch 1200] Loss: -6.0217e-02
+   [Multi-Asset EEP-PINN Completed in 97.49s]
+
+-------------------------------------------------------------------------------------
+[2/2] Evaluating Multi-Asset Ground Truth (LSM 100,000 paths) vs. Novel EEP-PINN...
+
+=====================================================================================
+Spot S_0   | European Exact  | LSM Ground Truth (100k)   | Novel EEP-PINN   | Diff vs LSM 
+-------------------------------------------------------------------------------------
+Rs. 80.0   | Rs.       16.61 | Rs.   19.96 +/- 0.00  (42763.8ms) | Rs.      19.79 (3.94ms) | Rs.     0.17
+Rs. 90.0   | Rs.        8.71 | Rs.   10.18 +/- 0.01  (36157.6ms) | Rs.      10.22 (3.27ms) | Rs.     0.03
+Rs. 100.0  | Rs.        3.61 | Rs.    4.01 +/- 0.02  (20808.5ms) | Rs.       4.01 (3.17ms) | Rs.     0.00
+Rs. 110.0  | Rs.        1.18 | Rs.    1.29 +/- 0.01  (9722.7ms) | Rs.       1.33 (3.03ms) | Rs.     0.04
+Rs. 120.0  | Rs.        0.31 | Rs.    0.34 +/- 0.00  (7033.9ms) | Rs.       0.40 (3.18ms) | Rs.     0.06
+=====================================================================================
+
+>> Computing 10D Early-Exercise Premium Manifold Slice for Publication...
+
+>> Generating High-Resolution Phase 3 (10-Asset) Publication Figures & LaTeX Table...
+>> Saved Multi-Asset Pricing Figure to: figures/phase3_10d_geom_pricing_comparison.png
+>> Saved Multi-Asset Premium Slice to: figures/phase3_10d_geom_premium_surface_slice.png
+>> Saved Multi-Asset LaTeX Table to: figures/phase3_10d_geom_benchmark_summary_table.tex
+>> [CSV Export] Saved multi-asset table to: results/phase3_10d_results.csv
+>> [JSON Export] Saved structured metrics to: results/benchmark_results.json
+>> All Phase 3 (10D) Deliverables (Figures, LaTeX, CSV, JSON) Generated Successfully!
+>> [Memory Cleanup] Cleared PyTorch CUDA cache. (Allocated: 0.02 GB | Reserved: 0.04 GB)
+
+
+==========================================================================================
+>> All Requested Benchmarks Completed in 9.84 minutes!
+>> Generated Deliverables are saved in 'figures/' and 'results/' directories.
+==========================================================================================

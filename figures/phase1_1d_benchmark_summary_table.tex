@@ -1,0 +1,13 @@
+\begin{table}[h!]
+\centering
+\small
+\caption{Phase 1 Free-Boundary Benchmark: 1D American Put Option ($K=100, T=1.0, r=0.05, \sigma=0.20$).}
+\label{tab:pinn_benchmarks}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+\textbf{Model Architecture} & \textbf{Rel. $L_2$ Error} & \textbf{Max Error ($L_\infty$)} & \textbf{MAE} & \textbf{Boundary RMSE} & \textbf{Latency} \\ \midrule
+Baseline PINN (Standard) & 1.12\% & \$ 2.60 & \$ 0.21 & \$ 5.65 & 7.98 ms \\
+Novel EEP-PINN (Proposed) & 0.37\% & \$ 0.44 & \$ 0.08 & \$ 2.99 & 11.79 ms \\
+\bottomrule
+\end{tabular}
+\end{table}

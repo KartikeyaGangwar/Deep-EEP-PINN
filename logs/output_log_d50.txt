@@ -1,0 +1,57 @@
+==========================================================================================
+      DEEP EARLY EXERCISE PREMIUM PINN (EEP-PINN) MASTER BENCHMARK SUITE
+==========================================================================================
+>> Host OS          : Linux 6.12.90+
+>> CPU Processor    : Intel(R) Xeon(R) CPU @ 2.00GHz
+>> CPU Logical Cores: 4 Threads | System RAM: 31.3 GB
+>> Execution Device : CUDA
+>> GPU Device Name  : Tesla P100-PCIE-16GB (15.9 GB VRAM)
+>> CUDA Version     : 12.6 | PyTorch: 2.7.1+cu126
+==========================================================================================
+>> [Memory Cleanup] Cleared PyTorch CUDA cache. (Allocated: 0.00 GB | Reserved: 0.00 GB)
+
+
+##########################################################################################
+   [SCALABILITY SUITE] 50-ASSET S&P SECTOR / NIFTY 50 SCALE BASKET BENCHMARK (d=50)
+##########################################################################################
+==========================================================================================
+   ULTRA-HIGH-DIMENSIONAL AMERICAN BASKET BENCHMARK (d=50 ASSETS, 100k LSM PATHS)
+==========================================================================================
+>> Environment    : PyTorch 2.7.1+cu126 | Device: CUDA
+>> GPU Device Name: Tesla P100-PCIE-16GB (15.9 GB VRAM)
+>> Basket Specs   : 50 Correlated Assets | Strike K=100.0, Expiry T=1.0y, Rate r=0.05
+>> Cross-Corr rho : 0.25 (1225 Pairwise Correlation Terms)
+>> Optimizer      : AdamW (1200 eps) + L-BFGS (50 iters)
+
+------------------------------------------------------------------------------------------
+[1/2] Training Novel Multi-Asset EEP-PINN for d=50 on GPU...
+>> [Multi-Asset EEP-PINN] Training d=50 Basket Model on CUDA...
+   [EEP-PINN d=50 Epoch  500] Loss: -1.2771e-02
+   [EEP-PINN d=50 Epoch 1000] Loss: -1.5947e-01
+   [EEP-PINN d=50 Epoch 1200] Loss: -1.6611e-01
+   [Multi-Asset EEP-PINN Completed in 634.96s]
+
+------------------------------------------------------------------------------------------
+[2/2] Evaluating Multi-Asset Ground Truth (LSM 100,000 paths) vs. Novel EEP-PINN...
+
+==========================================================================================
+Spot S_0   | European Exact  | LSM Ground Truth (100k)   | Novel EEP-PINN   | Diff vs LSM 
+------------------------------------------------------------------------------------------
+Rs. 80.0   | Rs.       16.60 | Rs.   20.02 +/- 0.00  (1392590.5ms) | Rs.      19.80 (4.81ms) | Rs.     0.22
+Rs. 90.0   | Rs.        8.11 | Rs.   10.15 +/- 0.01  (1221750.8ms) | Rs.      10.17 (4.59ms) | Rs.     0.02
+Rs. 100.0  | Rs.        2.74 | Rs.    3.28 +/- 0.01  (641511.6ms) | Rs.       3.30 (3.30ms) | Rs.     0.02
+Rs. 110.0  | Rs.        0.62 | Rs.    0.78 +/- 0.01  (167961.0ms) | Rs.       0.70 (3.65ms) | Rs.     0.08
+Rs. 120.0  | Rs.        0.10 | Rs.    0.16 +/- 0.00  (57852.2ms) | Rs.       0.11 (3.35ms) | Rs.     0.06
+==========================================================================================
+>> Saved Multi-Asset Pricing Figure to: figures/scalability_50d_pricing_comparison.png
+>> Saved Multi-Asset LaTeX Table to: figures/scalability_50d_benchmark_summary_table.tex
+>> [CSV Export] Saved multi-asset table to: results/scalability_50d_results.csv
+>> [JSON Export] Saved structured metrics to: results/benchmark_results.json
+>> Deliverables for d=50 (Figures, LaTeX, CSV, JSON) Generated Successfully in 'figures/' and 'results/'!
+>> [Memory Cleanup] Cleared PyTorch CUDA cache. (Allocated: 0.02 GB | Reserved: 0.04 GB)
+
+
+==========================================================================================
+>> All Requested Benchmarks Completed in 68.67 minutes!
+>> Generated Deliverables are saved in 'figures/' and 'results/' directories.
+==========================================================================================

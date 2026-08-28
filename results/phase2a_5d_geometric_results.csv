@@ -1,0 +1,13 @@
+Spot Price S0,European Price (Rs),LSM Ground Truth (Rs),LSM Std Error (Rs),Novel EEP-PINN (Rs),Premium e_theta (Rs),Absolute Error (Rs)
+80.0,16.70,19.96,0.00,19.86,3.15,0.10
+90.0,9.13,10.47,0.02,10.37,1.23,0.10
+100.0,4.16,4.57,0.02,4.53,0.37,0.04
+110.0,1.58,1.71,0.01,1.66,0.08,0.05
+120.0,0.52,0.54,0.01,0.53,0.01,0.01
+
+--- Summary Statistics ---
+avg_lsm_latency_ms,9045.90
+avg_eep_latency_ms,3.32
+speedup_factor,2722.1x
+max_diff_vs_lsm_rs,0.10
+mean_absolute_diff_rs,0.06

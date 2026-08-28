@@ -1,0 +1,16 @@
+\begin{table}[h!]
+\centering
+\small
+\caption{Phase 2A Benchmark: 5-Asset Correlated Geometric American Basket Put Option ($d=5, K=100, T=1.0, r=0.05, \rho=0.40, N_{\text{paths}}=100,000$).}
+\label{tab:multid_geom_benchmarks}
+\begin{tabular}{@{}cccccc@{}}
+\toprule
+\textbf{Spot $S_0$} & \textbf{European Exact} & \textbf{LSM Monte Carlo (100k)} & \textbf{Novel EEP-PINN} & \textbf{Premium $e_\theta$} & \textbf{Error vs LSM} \\ \midrule
+\$ 80.0 & \$ 16.70 & \$ 19.96 $\pm$ 0.00 & \$ 19.86 & \$ 3.16 & \$ 0.10 \\
+\$ 90.0 & \$ 9.13 & \$ 10.47 $\pm$ 0.02 & \$ 10.37 & \$ 1.24 & \$ 0.10 \\
+\$ 100.0 & \$ 4.16 & \$ 4.57 $\pm$ 0.02 & \$ 4.53 & \$ 0.37 & \$ 0.04 \\
+\$ 110.0 & \$ 1.58 & \$ 1.71 $\pm$ 0.01 & \$ 1.66 & \$ 0.08 & \$ 0.05 \\
+\$ 120.0 & \$ 0.52 & \$ 0.54 $\pm$ 0.01 & \$ 0.53 & \$ 0.01 & \$ 0.01 \\
+\bottomrule
+\end{tabular}
+\end{table}

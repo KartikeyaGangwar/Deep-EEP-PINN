@@ -1,0 +1,804 @@
+{
+    "project": "Deep-EEP-PINN: High-Dimensional American Basket Option Benchmark Suite",
+    "environment": {
+        "gpu": "Tesla P100-PCIE-16GB",
+        "pytorch": "2.7.1+cu126",
+        "cuda": "12.6",
+        "lsm_monte_carlo_paths": 100000,
+        "total_execution_time_minutes": 9.92
+    },
+    "benchmarks": {
+        "phase1_1d": {
+            "problem": "1D American Put Free Boundary (90,000 Grid Nodes)",
+            "psor_gt_latency_ms": 1149.78,
+            "baseline_pinn": {
+                "rel_l2_error_pct": 3.86,
+                "max_error_rs": 7.63,
+                "mae_rs": 0.97,
+                "eval_latency_ms": 8.0
+            },
+            "novel_eep_pinn": {
+                "rel_l2_error_pct": 0.37,
+                "max_error_rs": 0.43,
+                "mae_rs": 0.08,
+                "eval_latency_ms": 11.84,
+                "speedup_vs_psor": 97.1
+            }
+        },
+        "phase2a_5d_geometric": {
+            "problem": "5-Asset Correlated Geometric Basket Option (d=5, rho=0.40)",
+            "mean_absolute_diff_rs": 0.08,
+            "atm_diff_rs": 0.06,
+            "avg_lsm_latency_ms": 9484.37,
+            "avg_eep_latency_ms": 3.5,
+            "speedup_vs_lsm": 2712.2
+        },
+        "phase2b_5d_arithmetic": {
+            "problem": "5-Asset Real-World Arithmetic Basket Option (d=5, rho=0.40)",
+            "mean_absolute_diff_rs": 0.07,
+            "atm_diff_rs": 0.02,
+            "otm_diff_rs": 0.0,
+            "avg_lsm_latency_ms": 7623.61,
+            "avg_eep_latency_ms": 7.55,
+            "speedup_vs_lsm": 1010.0
+        },
+        "phase3_10d_highdim": {
+            "problem": "10-Asset High-Dimensional Correlated Basket Option (d=10, 45 Corr Pairs)",
+            "mean_absolute_diff_rs": 0.14,
+            "deep_itm_diff_rs": 0.11,
+            "avg_lsm_latency_ms": 23900.48,
+            "avg_eep_latency_ms": 3.47,
+            "speedup_vs_lsm": 6882.6
+        }
+    },
+    "runs": [
+        {
+            "stage_id": "phase1_1d_american_option",
+            "hardware_profile": {
+                "timestamp": "2026-08-27 08:49:26",
+                "os": "Linux 6.12.90+",
+                "python_version": "3.12.13",
+                "pytorch_version": "2.7.1+cu126",
+                "cpu_model": "Intel(R) Xeon(R) CPU @ 2.00GHz",
+                "cpu_logical_threads": 4,
+                "cpu_physical_cores": 2,
+                "system_ram_gb": 31.35,
+                "cuda_available": true,
+                "gpu_device_name": "Tesla P100-PCIE-16GB",
+                "gpu_vram_gb": 15.89,
+                "cuda_version": "12.6"
+            },
+            "metrics": {
+                "models": {
+                    "Baseline PINN (Standard)": {
+                        "rel_L2_error": 0.04090462938432908,
+                        "L_inf_error": 7.026027202606201,
+                        "MAE": 0.8912868574811786,
+                        "RMSE": 1.3721970636375733,
+                        "boundary_rmse": 14.175689264122461,
+                        "eval_time": 0.007946525000079419,
+                        "train_time": 20.753212765000058
+                    },
+                    "Novel EEP-PINN (Proposed)": {
+                        "rel_L2_error": 0.003614140172649364,
+                        "L_inf_error": 0.4413458068327145,
+                        "MAE": 0.07403807984611753,
+                        "RMSE": 0.12124086215004323,
+                        "boundary_rmse": 2.983899208259192,
+                        "eval_time": 0.012293860999989192,
+                        "train_time": 25.61011466900004
+                    }
+                }
+            }
+        },
+        {
+            "stage_id": "phase2a_5d_geometric_basket",
+            "hardware_profile": {
+                "timestamp": "2026-08-27 08:52:07",
+                "os": "Linux 6.12.90+",
+                "python_version": "3.12.13",
+                "pytorch_version": "2.7.1+cu126",
+                "cpu_model": "Intel(R) Xeon(R) CPU @ 2.00GHz",
+                "cpu_logical_threads": 4,
+                "cpu_physical_cores": 2,
+                "system_ram_gb": 31.35,
+                "cuda_available": true,
+                "gpu_device_name": "Tesla P100-PCIE-16GB",
+                "gpu_vram_gb": 15.89,
+                "cuda_version": "12.6"
+            },
+            "metrics": {
+                "pricing_table": [
+                    {
+                        "spot": 80.0,
+                        "euro": 16.701873674584547,
+                        "lsm": 19.95852847833727,
+                        "lsm_se": 0.003859858838161247,
+                        "eep": 19.79050064086914,
+                        "premium": 3.088627338409424,
+                        "abs_error": 0.16802783746813077
+                    },
+                    {
+                        "spot": 90.0,
+                        "euro": 9.132261627396979,
+                        "lsm": 10.442674218998253,
+                        "lsm_se": 0.0171171498420954,
+                        "eep": 10.347549438476562,
+                        "premium": 1.2152940034866333,
+                        "abs_error": 0.09512478052169016
+                    },
+                    {
+                        "spot": 100.0,
+                        "euro": 4.158603535976077,
+                        "lsm": 4.536201867561972,
+                        "lsm_se": 0.017146379829713357,
+                        "eep": 4.470691680908203,
+                        "premium": 0.3120881915092468,
+                        "abs_error": 0.06551018665376862
+                    },
+                    {
+                        "spot": 110.0,
+                        "euro": 1.5847844642333797,
+                        "lsm": 1.7064778512352132,
+                        "lsm_se": 0.011508723802446538,
+                        "eep": 1.6615461111068726,
+                        "premium": 0.07676255702972412,
+                        "abs_error": 0.04493174012834067
+                    },
+                    {
+                        "spot": 120.0,
+                        "euro": 0.5154165099408932,
+                        "lsm": 0.5527902339800749,
+                        "lsm_se": 0.006568798249031911,
+                        "eep": 0.5412145853042603,
+                        "premium": 0.025795087218284607,
+                        "abs_error": 0.01157564867581462
+                    }
+                ],
+                "summary_statistics": {
+                    "avg_lsm_latency_ms": "9005.14",
+                    "avg_eep_latency_ms": "3.57",
+                    "speedup_factor": "2525.3x",
+                    "max_diff_vs_lsm_rs": "0.17",
+                    "mean_absolute_diff_rs": "0.08"
+                },
+                "train_time_seconds": 113.67
+            }
+        },
+        {
+            "stage_id": "phase2b_5d_arithmetic_basket",
+            "hardware_profile": {
+                "timestamp": "2026-08-27 08:54:47",
+                "os": "Linux 6.12.90+",
+                "python_version": "3.12.13",
+                "pytorch_version": "2.7.1+cu126",
+                "cpu_model": "Intel(R) Xeon(R) CPU @ 2.00GHz",
+                "cpu_logical_threads": 4,
+                "cpu_physical_cores": 2,
+                "system_ram_gb": 31.35,
+                "cuda_available": true,
+                "gpu_device_name": "Tesla P100-PCIE-16GB",
+                "gpu_vram_gb": 15.89,
+                "cuda_version": "12.6"
+            },
+            "metrics": {
+                "pricing_table": [
+                    {
+                        "spot": 80.0,
+                        "euro": 15.961083331110885,
+                        "lsm": 19.95005449716389,
+                        "lsm_se": 0.003826413623869889,
+                        "eep": 19.78807830810547,
+                        "premium": 3.8269801139831543,
+                        "abs_error": 0.16197618905842148
+                    },
+                    {
+                        "spot": 90.0,
+                        "euro": 8.532250435553337,
+                        "lsm": 10.272407000752782,
+                        "lsm_se": 0.014943461845198172,
+                        "eep": 10.161430358886719,
+                        "premium": 1.6291699409484863,
+                        "abs_error": 0.11097664186606337
+                    },
+                    {
+                        "spot": 100.0,
+                        "euro": 3.784093232586258,
+                        "lsm": 4.270033730151194,
+                        "lsm_se": 0.016428244988929478,
+                        "eep": 4.245124340057373,
+                        "premium": 0.460990309715271,
+                        "abs_error": 0.024909390093821315
+                    },
+                    {
+                        "spot": 110.0,
+                        "euro": 1.402361005524284,
+                        "lsm": 1.537812622133537,
+                        "lsm_se": 0.010725305523108266,
+                        "eep": 1.5197885036468506,
+                        "premium": 0.11741038411855698,
+                        "abs_error": 0.018024118486686502
+                    },
+                    {
+                        "spot": 120.0,
+                        "euro": 0.44356432465704376,
+                        "lsm": 0.4711774427969348,
+                        "lsm_se": 0.005878922144461211,
+                        "eep": 0.47399845719337463,
+                        "premium": 0.030426422134041786,
+                        "abs_error": 0.002821014396439836
+                    }
+                ],
+                "summary_statistics": {
+                    "avg_lsm_latency_ms": "7597.15",
+                    "avg_eep_latency_ms": "8.18",
+                    "speedup_factor": "928.5x",
+                    "max_diff_vs_lsm_rs": "0.16",
+                    "mean_absolute_diff_rs": "0.06"
+                },
+                "train_time_seconds": 119.43
+            }
+        },
+        {
+            "stage_id": "phase3_10d_geometric_basket",
+            "hardware_profile": {
+                "timestamp": "2026-08-27 08:58:26",
+                "os": "Linux 6.12.90+",
+                "python_version": "3.12.13",
+                "pytorch_version": "2.7.1+cu126",
+                "cpu_model": "Intel(R) Xeon(R) CPU @ 2.00GHz",
+                "cpu_logical_threads": 4,
+                "cpu_physical_cores": 2,
+                "system_ram_gb": 31.35,
+                "cuda_available": true,
+                "gpu_device_name": "Tesla P100-PCIE-16GB",
+                "gpu_vram_gb": 15.89,
+                "cuda_version": "12.6"
+            },
+            "metrics": {
+                "pricing_table": [
+                    {
+                        "spot": 80.0,
+                        "euro": 16.606447662783935,
+                        "lsm": 19.960515957971822,
+                        "lsm_se": 0.003418666275472452,
+                        "eep": 19.553281784057617,
+                        "premium": 2.946829319000244,
+                        "abs_error": 0.4072341739142047
+                    },
+                    {
+                        "spot": 90.0,
+                        "euro": 8.709652659691429,
+                        "lsm": 10.207380570449015,
+                        "lsm_se": 0.013063282988908766,
+                        "eep": 10.192378997802734,
+                        "premium": 1.4827001094818115,
+                        "abs_error": 0.015001572646280437
+                    },
+                    {
+                        "spot": 100.0,
+                        "euro": 3.6115237090361134,
+                        "lsm": 4.003150444736703,
+                        "lsm_se": 0.015186803576533825,
+                        "eep": 3.9832563400268555,
+                        "premium": 0.3717336654663086,
+                        "abs_error": 0.01989410470984776
+                    },
+                    {
+                        "spot": 110.0,
+                        "euro": 1.1810305749228096,
+                        "lsm": 1.2746007736700469,
+                        "lsm_se": 0.009367056862723187,
+                        "eep": 1.2825725078582764,
+                        "premium": 0.10154223442077637,
+                        "abs_error": 0.007971734188229496
+                    },
+                    {
+                        "spot": 120.0,
+                        "euro": 0.3115940793248786,
+                        "lsm": 0.34104933319129116,
+                        "lsm_se": 0.004880666298671227,
+                        "eep": 0.36127176880836487,
+                        "premium": 0.049675844609737396,
+                        "abs_error": 0.02022243561707371
+                    }
+                ],
+                "summary_statistics": {
+                    "avg_lsm_latency_ms": "23843.82",
+                    "avg_eep_latency_ms": "4.05",
+                    "speedup_factor": "5892.5x",
+                    "max_diff_vs_lsm_rs": "0.41",
+                    "mean_absolute_diff_rs": "0.09"
+                },
+                "train_time_seconds": 97.43
+            }
+        },
+        {
+            "stage_id": "scalability_30d_basket",
+            "hardware_profile": {
+                "timestamp": "2026-08-27 09:21:26",
+                "os": "Linux 6.12.90+",
+                "python_version": "3.12.13",
+                "pytorch_version": "2.7.1+cu126",
+                "cpu_model": "Intel(R) Xeon(R) CPU @ 2.00GHz",
+                "cpu_logical_threads": 4,
+                "cpu_physical_cores": 2,
+                "system_ram_gb": 31.35,
+                "cuda_available": true,
+                "gpu_device_name": "Tesla P100-PCIE-16GB",
+                "gpu_vram_gb": 15.89,
+                "cuda_version": "12.6"
+            },
+            "metrics": {
+                "dimension": 30,
+                "pricing_table": [
+                    {
+                        "spot": 80.0,
+                        "euro": 16.75771584239287,
+                        "lsm": 19.99251430933835,
+                        "lsm_se": 0.004494649691506929,
+                        "eep": 19.960315704345703,
+                        "premium": 3.2027018070220947,
+                        "abs_error": 0.03219860499264726
+                    },
+                    {
+                        "spot": 90.0,
+                        "euro": 8.630399173876043,
+                        "lsm": 10.194505835321197,
+                        "lsm_se": 0.01010966316402938,
+                        "eep": 10.09200668334961,
+                        "premium": 1.4616694450378418,
+                        "abs_error": 0.10249915197158721
+                    },
+                    {
+                        "spot": 100.0,
+                        "euro": 3.388894449550669,
+                        "lsm": 3.835830309414714,
+                        "lsm_se": 0.01438323865326403,
+                        "eep": 3.75881290435791,
+                        "premium": 0.36998850107192993,
+                        "abs_error": 0.07701740505680377
+                    },
+                    {
+                        "spot": 110.0,
+                        "euro": 1.0034396976427722,
+                        "lsm": 1.1523586157929604,
+                        "lsm_se": 0.008787717573229825,
+                        "eep": 1.0918961763381958,
+                        "premium": 0.08845531195402145,
+                        "abs_error": 0.060462439454764594
+                    },
+                    {
+                        "spot": 120.0,
+                        "euro": 0.22944096971316874,
+                        "lsm": 0.29354064794366846,
+                        "lsm_se": 0.004390285109424584,
+                        "eep": 0.2538801431655884,
+                        "premium": 0.024440893903374672,
+                        "abs_error": 0.039660504778080086
+                    }
+                ],
+                "summary_statistics": {
+                    "avg_lsm_latency_ms": "204703.02",
+                    "avg_eep_latency_ms": "3.26",
+                    "speedup_factor": "62842.1x",
+                    "max_diff_vs_lsm_rs": "0.10",
+                    "mean_absolute_diff_rs": "0.06"
+                },
+                "train_time_seconds": 351.1
+            }
+        },
+        {
+            "stage_id": "phase1_1d_american_option",
+            "hardware_profile": {
+                "timestamp": "2026-08-27 09:58:44",
+                "os": "Linux 6.12.90+",
+                "python_version": "3.12.13",
+                "pytorch_version": "2.7.1+cu126",
+                "cpu_model": "Intel(R) Xeon(R) CPU @ 2.00GHz",
+                "cpu_logical_threads": 4,
+                "cpu_physical_cores": 2,
+                "system_ram_gb": 31.35,
+                "cuda_available": true,
+                "gpu_device_name": "Tesla P100-PCIE-16GB",
+                "gpu_vram_gb": 15.89,
+                "cuda_version": "12.6"
+            },
+            "metrics": {
+                "models": {
+                    "Baseline PINN (Standard)": {
+                        "rel_L2_error": 0.011231589831845024,
+                        "L_inf_error": 2.6036152839660645,
+                        "MAE": 0.20687293553281116,
+                        "RMSE": 0.3767777588798744,
+                        "boundary_rmse": 5.648332009102319,
+                        "eval_time": 0.007980231999965781,
+                        "train_time": 23.733168931000023
+                    },
+                    "Novel EEP-PINN (Proposed)": {
+                        "rel_L2_error": 0.0036952852624908125,
+                        "L_inf_error": 0.43634312384617147,
+                        "MAE": 0.07635210874736084,
+                        "RMSE": 0.1239629758981683,
+                        "boundary_rmse": 2.9911275221595948,
+                        "eval_time": 0.011793648999969264,
+                        "train_time": 24.495583288999967
+                    }
+                }
+            }
+        },
+        {
+            "stage_id": "phase2a_5d_geometric_basket",
+            "hardware_profile": {
+                "timestamp": "2026-08-27 10:01:25",
+                "os": "Linux 6.12.90+",
+                "python_version": "3.12.13",
+                "pytorch_version": "2.7.1+cu126",
+                "cpu_model": "Intel(R) Xeon(R) CPU @ 2.00GHz",
+                "cpu_logical_threads": 4,
+                "cpu_physical_cores": 2,
+                "system_ram_gb": 31.35,
+                "cuda_available": true,
+                "gpu_device_name": "Tesla P100-PCIE-16GB",
+                "gpu_vram_gb": 15.89,
+                "cuda_version": "12.6"
+            },
+            "metrics": {
+                "pricing_table": [
+                    {
+                        "spot": 80.0,
+                        "euro": 16.701873674584547,
+                        "lsm": 19.95853641604884,
+                        "lsm_se": 0.003868335343929393,
+                        "eep": 19.855613708496094,
+                        "premium": 3.1537392139434814,
+                        "abs_error": 0.10292270755274657
+                    },
+                    {
+                        "spot": 90.0,
+                        "euro": 9.132261627396979,
+                        "lsm": 10.465502986777045,
+                        "lsm_se": 0.016789626028709193,
+                        "eep": 10.365416526794434,
+                        "premium": 1.2331607341766357,
+                        "abs_error": 0.10008645998261123
+                    },
+                    {
+                        "spot": 100.0,
+                        "euro": 4.158603535976077,
+                        "lsm": 4.572732276472288,
+                        "lsm_se": 0.017444850413708263,
+                        "eep": 4.530179977416992,
+                        "premium": 0.3715764880180359,
+                        "abs_error": 0.042552299055295784
+                    },
+                    {
+                        "spot": 110.0,
+                        "euro": 1.5847844642333797,
+                        "lsm": 1.7137667104050016,
+                        "lsm_se": 0.011545160220194021,
+                        "eep": 1.662479281425476,
+                        "premium": 0.07769573479890823,
+                        "abs_error": 0.05128742897952554
+                    },
+                    {
+                        "spot": 120.0,
+                        "euro": 0.5154165099408932,
+                        "lsm": 0.5414634302809216,
+                        "lsm_se": 0.006481139314059283,
+                        "eep": 0.5276802182197571,
+                        "premium": 0.01226074155420065,
+                        "abs_error": 0.013783212061164507
+                    }
+                ],
+                "summary_statistics": {
+                    "avg_lsm_latency_ms": "9045.90",
+                    "avg_eep_latency_ms": "3.32",
+                    "speedup_factor": "2722.1x",
+                    "max_diff_vs_lsm_rs": "0.10",
+                    "mean_absolute_diff_rs": "0.06"
+                },
+                "train_time_seconds": 113.56
+            }
+        },
+        {
+            "stage_id": "phase2b_5d_arithmetic_basket",
+            "hardware_profile": {
+                "timestamp": "2026-08-27 10:04:03",
+                "os": "Linux 6.12.90+",
+                "python_version": "3.12.13",
+                "pytorch_version": "2.7.1+cu126",
+                "cpu_model": "Intel(R) Xeon(R) CPU @ 2.00GHz",
+                "cpu_logical_threads": 4,
+                "cpu_physical_cores": 2,
+                "system_ram_gb": 31.35,
+                "cuda_available": true,
+                "gpu_device_name": "Tesla P100-PCIE-16GB",
+                "gpu_vram_gb": 15.89,
+                "cuda_version": "12.6"
+            },
+            "metrics": {
+                "pricing_table": [
+                    {
+                        "spot": 80.0,
+                        "euro": 15.961083331110885,
+                        "lsm": 19.95011086257915,
+                        "lsm_se": 0.0038173882927431506,
+                        "eep": 19.787479400634766,
+                        "premium": 3.826380729675293,
+                        "abs_error": 0.16263146194438605
+                    },
+                    {
+                        "spot": 90.0,
+                        "euro": 8.532250435553337,
+                        "lsm": 10.297208198520957,
+                        "lsm_se": 0.015342462583885797,
+                        "eep": 10.14536190032959,
+                        "premium": 1.6131006479263306,
+                        "abs_error": 0.15184629819136752
+                    },
+                    {
+                        "spot": 100.0,
+                        "euro": 3.784093232586258,
+                        "lsm": 4.282098380069094,
+                        "lsm_se": 0.016423607121827565,
+                        "eep": 4.241915225982666,
+                        "premium": 0.45778143405914307,
+                        "abs_error": 0.04018315408642792
+                    },
+                    {
+                        "spot": 110.0,
+                        "euro": 1.402361005524284,
+                        "lsm": 1.5271391902713753,
+                        "lsm_se": 0.010659012547058153,
+                        "eep": 1.518460988998413,
+                        "premium": 0.11608287692070007,
+                        "abs_error": 0.00867820127296226
+                    },
+                    {
+                        "spot": 120.0,
+                        "euro": 0.44356432465704376,
+                        "lsm": 0.47261050335289556,
+                        "lsm_se": 0.005910492820525113,
+                        "eep": 0.4733244478702545,
+                        "premium": 0.029752405360341072,
+                        "abs_error": 0.0007139445173589554
+                    }
+                ],
+                "summary_statistics": {
+                    "avg_lsm_latency_ms": "7498.88",
+                    "avg_eep_latency_ms": "7.47",
+                    "speedup_factor": "1003.6x",
+                    "max_diff_vs_lsm_rs": "0.16",
+                    "mean_absolute_diff_rs": "0.07"
+                },
+                "train_time_seconds": 119.32
+            }
+        },
+        {
+            "stage_id": "phase3_10d_geometric_basket",
+            "hardware_profile": {
+                "timestamp": "2026-08-27 10:07:40",
+                "os": "Linux 6.12.90+",
+                "python_version": "3.12.13",
+                "pytorch_version": "2.7.1+cu126",
+                "cpu_model": "Intel(R) Xeon(R) CPU @ 2.00GHz",
+                "cpu_logical_threads": 4,
+                "cpu_physical_cores": 2,
+                "system_ram_gb": 31.35,
+                "cuda_available": true,
+                "gpu_device_name": "Tesla P100-PCIE-16GB",
+                "gpu_vram_gb": 15.89,
+                "cuda_version": "12.6"
+            },
+            "metrics": {
+                "pricing_table": [
+                    {
+                        "spot": 80.0,
+                        "euro": 16.606447662783935,
+                        "lsm": 19.960629895951254,
+                        "lsm_se": 0.003447355383825488,
+                        "eep": 19.792879104614258,
+                        "premium": 3.1864256858825684,
+                        "abs_error": 0.16775079133699577
+                    },
+                    {
+                        "spot": 90.0,
+                        "euro": 8.709652659691429,
+                        "lsm": 10.182525134032142,
+                        "lsm_se": 0.01287244176539003,
+                        "eep": 10.21506118774414,
+                        "premium": 1.5053821802139282,
+                        "abs_error": 0.03253605371199875
+                    },
+                    {
+                        "spot": 100.0,
+                        "euro": 3.6115237090361134,
+                        "lsm": 4.011109303191435,
+                        "lsm_se": 0.015285392848578574,
+                        "eep": 4.012228965759277,
+                        "premium": 0.40070611238479614,
+                        "abs_error": 0.001119662567842461
+                    },
+                    {
+                        "spot": 110.0,
+                        "euro": 1.1810305749228096,
+                        "lsm": 1.2927045818809888,
+                        "lsm_se": 0.00955838825211491,
+                        "eep": 1.3333688974380493,
+                        "premium": 0.15233862400054932,
+                        "abs_error": 0.040664315557060515
+                    },
+                    {
+                        "spot": 120.0,
+                        "euro": 0.3115940793248786,
+                        "lsm": 0.33740586556193725,
+                        "lsm_se": 0.004795117962241535,
+                        "eep": 0.3979651927947998,
+                        "premium": 0.08636927604675293,
+                        "abs_error": 0.06055932723286256
+                    }
+                ],
+                "summary_statistics": {
+                    "avg_lsm_latency_ms": "23297.30",
+                    "avg_eep_latency_ms": "3.32",
+                    "speedup_factor": "7016.6x",
+                    "max_diff_vs_lsm_rs": "0.17",
+                    "mean_absolute_diff_rs": "0.06"
+                },
+                "train_time_seconds": 97.49
+            }
+        },
+        {
+            "stage_id": "scalability_30d_basket",
+            "hardware_profile": {
+                "timestamp": "2026-08-27 10:37:54",
+                "os": "Linux 6.12.90+",
+                "python_version": "3.12.13",
+                "pytorch_version": "2.7.1+cu126",
+                "cpu_model": "Intel(R) Xeon(R) CPU @ 2.00GHz",
+                "cpu_logical_threads": 4,
+                "cpu_physical_cores": 2,
+                "system_ram_gb": 31.35,
+                "cuda_available": true,
+                "gpu_device_name": "Tesla P100-PCIE-16GB",
+                "gpu_vram_gb": 15.89,
+                "cuda_version": "12.6"
+            },
+            "metrics": {
+                "dimension": 30,
+                "pricing_table": [
+                    {
+                        "spot": 80.0,
+                        "euro": 16.75771584239287,
+                        "lsm": 19.992082966424572,
+                        "lsm_se": 0.004410055986066917,
+                        "eep": 19.82949447631836,
+                        "premium": 3.0718798637390137,
+                        "abs_error": 0.1625884901062129
+                    },
+                    {
+                        "spot": 90.0,
+                        "euro": 8.630399173876043,
+                        "lsm": 10.194718590382815,
+                        "lsm_se": 0.01008479434394515,
+                        "eep": 10.405134201049805,
+                        "premium": 1.774796962738037,
+                        "abs_error": 0.2104156106669901
+                    },
+                    {
+                        "spot": 100.0,
+                        "euro": 3.388894449550669,
+                        "lsm": 3.8314919823801175,
+                        "lsm_se": 0.01431076214712995,
+                        "eep": 3.8741602897644043,
+                        "premium": 0.4853358864784241,
+                        "abs_error": 0.04266830738428684
+                    },
+                    {
+                        "spot": 110.0,
+                        "euro": 1.0034396976427722,
+                        "lsm": 1.1561837617139599,
+                        "lsm_se": 0.008697013690533387,
+                        "eep": 1.1234595775604248,
+                        "premium": 0.12001876533031464,
+                        "abs_error": 0.03272418415353506
+                    },
+                    {
+                        "spot": 120.0,
+                        "euro": 0.22944096971316874,
+                        "lsm": 0.2839032400421957,
+                        "lsm_se": 0.004373533656141926,
+                        "eep": 0.2634577453136444,
+                        "premium": 0.034018490463495255,
+                        "abs_error": 0.020445494728551283
+                    }
+                ],
+                "summary_statistics": {
+                    "avg_lsm_latency_ms": "203678.34",
+                    "avg_eep_latency_ms": "3.51",
+                    "speedup_factor": "58024.6x",
+                    "max_diff_vs_lsm_rs": "0.21",
+                    "mean_absolute_diff_rs": "0.09"
+                },
+                "train_time_seconds": 789.72
+            }
+        },
+        {
+            "stage_id": "scalability_50d_basket",
+            "hardware_profile": {
+                "timestamp": "2026-08-27 11:46:39",
+                "os": "Linux 6.12.90+",
+                "python_version": "3.12.13",
+                "pytorch_version": "2.7.1+cu126",
+                "cpu_model": "Intel(R) Xeon(R) CPU @ 2.00GHz",
+                "cpu_logical_threads": 4,
+                "cpu_physical_cores": 2,
+                "system_ram_gb": 31.35,
+                "cuda_available": true,
+                "gpu_device_name": "Tesla P100-PCIE-16GB",
+                "gpu_vram_gb": 15.89,
+                "cuda_version": "12.6"
+            },
+            "metrics": {
+                "dimension": 50,
+                "pricing_table": [
+                    {
+                        "spot": 80.0,
+                        "euro": 16.602688789569243,
+                        "lsm": 20.019117011376643,
+                        "lsm_se": 0.004295141465720993,
+                        "eep": 19.801380157470703,
+                        "premium": 3.1986889839172363,
+                        "abs_error": 0.2177368539059401
+                    },
+                    {
+                        "spot": 90.0,
+                        "euro": 8.105076925657556,
+                        "lsm": 10.146015801947957,
+                        "lsm_se": 0.006989722052765138,
+                        "eep": 10.168533325195312,
+                        "premium": 2.0634920597076416,
+                        "abs_error": 0.022517523247355342
+                    },
+                    {
+                        "spot": 100.0,
+                        "euro": 2.7414774153429704,
+                        "lsm": 3.2828498905716543,
+                        "lsm_se": 0.012262481786939474,
+                        "eep": 3.302975654602051,
+                        "premium": 0.5614786744117737,
+                        "abs_error": 0.020125764030396454
+                    },
+                    {
+                        "spot": 110.0,
+                        "euro": 0.61922452017998,
+                        "lsm": 0.7826294166975017,
+                        "lsm_se": 0.006866054366126161,
+                        "eep": 0.6991706490516663,
+                        "premium": 0.07995852082967758,
+                        "abs_error": 0.08345876764583549
+                    },
+                    {
+                        "spot": 120.0,
+                        "euro": 0.09598259039030355,
+                        "lsm": 0.16206320039977917,
+                        "lsm_se": 0.0031189999081919074,
+                        "eep": 0.10632093995809555,
+                        "premium": 0.010339342057704926,
+                        "abs_error": 0.05574226044168362
+                    }
+                ],
+                "summary_statistics": {
+                    "avg_lsm_latency_ms": "696333.20",
+                    "avg_eep_latency_ms": "3.94",
+                    "speedup_factor": "176760.1x",
+                    "max_diff_vs_lsm_rs": "0.22",
+                    "mean_absolute_diff_rs": "0.08"
+                },
+                "train_time_seconds": 634.96
+            }
+        }
+    ],
+    "latest_run": "2026-08-27 11:46:39"
+}

@@ -1,0 +1,16 @@
+\begin{table}[h!]
+\centering
+\small
+\caption{Scalability Benchmark: 30-Asset Correlated American Basket Put Option ($d=30, K=100, T=1.0, r=0.05, 435\text{ Correlation Pairs}, N_{\text{paths}}=100,000$).}
+\label{tab:scalability_30d_benchmarks}
+\begin{tabular}{@{}cccccc@{}}
+\toprule
+\textbf{Spot $S_0$} & \textbf{European Exact} & \textbf{LSM Monte Carlo (100k)} & \textbf{Novel 30D EEP-PINN} & \textbf{Premium $e_\theta$} & \textbf{Error vs LSM} \\ \midrule
+\$ 80.0 & \$ 16.76 & \$ 19.99 $\pm$ 0.00 & \$ 19.83 & \$ 3.07 & \$ 0.16 \\
+\$ 90.0 & \$ 8.63 & \$ 10.19 $\pm$ 0.01 & \$ 10.41 & \$ 1.78 & \$ 0.22 \\
+\$ 100.0 & \$ 3.39 & \$ 3.83 $\pm$ 0.01 & \$ 3.87 & \$ 0.48 & \$ 0.04 \\
+\$ 110.0 & \$ 1.00 & \$ 1.16 $\pm$ 0.01 & \$ 1.12 & \$ 0.12 & \$ 0.04 \\
+\$ 120.0 & \$ 0.23 & \$ 0.28 $\pm$ 0.00 & \$ 0.26 & \$ 0.03 & \$ 0.02 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,44 @@
+==========================================================================================
+      DEEP EARLY EXERCISE PREMIUM PINN (EEP-PINN) MASTER BENCHMARK SUITE
+==========================================================================================
+>> Host OS          : Linux 6.12.90+
+>> CPU Processor    : Intel(R) Xeon(R) CPU @ 2.00GHz
+>> CPU Logical Cores: 4 Threads | System RAM: 31.3 GB
+>> Execution Device : CUDA
+>> GPU Device Name  : Tesla P100-PCIE-16GB (15.9 GB VRAM)
+>> CUDA Version     : 12.6 | PyTorch: 2.7.1+cu126
+==========================================================================================
+>> [Memory Cleanup] Cleared PyTorch CUDA cache. (Allocated: 0.00 GB | Reserved: 0.00 GB)
+
+
+##########################################################################################
+   [SCALABILITY SUITE] 30-ASSET DOW JONES SCALE BASKET BENCHMARK (d=30)
+##########################################################################################
+==========================================================================================
+   ULTRA-HIGH-DIMENSIONAL AMERICAN BASKET BENCHMARK (d=30 ASSETS, 100k LSM PATHS)
+==========================================================================================
+>> Environment    : PyTorch 2.7.1+cu126 | Device: CUDA
+>> GPU Device Name: Tesla P100-PCIE-16GB (15.9 GB VRAM)
+>> Basket Specs   : 30 Correlated Assets | Strike K=100.0, Expiry T=1.0y, Rate r=0.05
+>> Cross-Corr rho : 0.3 (435 Pairwise Correlation Terms)
+>> Optimizer      : AdamW (1200 eps) + L-BFGS (50 iters)
+
+------------------------------------------------------------------------------------------
+[1/2] Training Novel Multi-Asset EEP-PINN for d=30 on GPU...
+>> [Multi-Asset EEP-PINN] Training d=30 Basket Model on CUDA...
+   [EEP-PINN d=30 Epoch  500] Loss: -2.4874e-02
+   [EEP-PINN d=30 Epoch 1000] Loss: -1.7409e-01
+   [EEP-PINN d=30 Epoch 1200] Loss: -1.8474e-01
+   [Multi-Asset EEP-PINN Completed in 789.72s]
+
+------------------------------------------------------------------------------------------
+[2/2] Evaluating Multi-Asset Ground Truth (LSM 100,000 paths) vs. Novel EEP-PINN...
+
+==========================================================================================
+Spot S_0   | European Exact  | LSM Ground Truth (100k)   | Novel EEP-PINN   | Diff vs LSM 
+------------------------------------------------------------------------------------------
+Rs. 80.0   | Rs.       16.76 | Rs.   19.99 +/- 0.00  (396132.4ms) | Rs.      19.83 (3.95ms) | Rs.     0.16
+Rs. 90.0   | Rs.        8.63 | Rs.   10.19 +/- 0.01  (350546.6ms) | Rs.      10.41 (3.43ms) | Rs.     0.21
+Rs. 100.0  | Rs.        3.39 | Rs.    3.83 +/- 0.01  (187887.1ms) | Rs.       3.87 (3.87ms) | Rs.     0.04
+Rs. 110.0  | Rs.        1.00 | Rs.    1.16 +/- 0.01  (58583.3ms) | Rs.       1.12 (3.02ms) | Rs.     0.03
+Rs. 120.0  | Rs.        0.23 | Rs.    0.28 +/- 0.00  (25242.3ms) | Rs.       0.26 

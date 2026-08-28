@@ -1,0 +1,119 @@
+﻿\documentclass[10.5pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts,mathtools}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{titlesec}
+
+\titlespacing*{\section}{0pt}{4pt plus 1pt minus 1pt}{2pt plus 1pt minus 1pt}
+\titlespacing*{\subsection}{0pt}{3pt plus 1pt minus 1pt}{1.5pt plus 1pt minus 1pt}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+}
+
+\title{\vspace{-2.0em}\textbf{\Large Undergraduate Dissertation Research Proposal}\\[0.25em]
+\textbf{\large Solving American Option Free-Boundary Problems via Physics-Informed Neural Networks: Formulation, Stability, and Numerical Benchmarking}}
+
+\author{\textbf{Candidate:} Final Year B.Sc. (Hons) Mathematics, University of Delhi\\
+\textbf{Proposed Area:} Scientific Machine Learning \& Numerical Differential Equations}
+\date{\vspace{-0.6em}\today}
+
+\begin{document}
+
+\maketitle
+
+\vspace{-1.2em}
+\begin{abstract}
+\noindent While European option valuation under the Black-Scholes model admits an exact analytical formula, American-style options allow early exercise at any time prior to maturity. This feature transforms the linear Black-Scholes Partial Differential Equation (PDE) into a non-linear \textbf{Parabolic Variational Inequality} (a free-boundary problem), where the optimal exercise boundary $S^*(t)$ is an unknown moving curve. In this undergraduate research project, we develop a scientific machine learning framework to solve the American option pricing problem. We adopt a structured phased approach: (i) first developing and benchmarking a custom Physics-Informed Neural Network (PINN) against the classical Crank-Nicolson scheme with Projected Successive Over-Relaxation (PSOR) in 1D, and (ii) extending the mesh-free neural solver to multi-asset American basket options ($d = 2, 5, 10$) where traditional grid-based finite difference methods suffer from the curse of dimensionality.
+\end{abstract}
+
+\vspace{-0.4em}
+\section{Problem Motivation \& Mathematical Formulation}
+The classical Black-Scholes-Merton model (1973) assumes an asset price $S$ following Geometric Brownian Motion. For \textbf{American options}, the holder retains the right to exercise at any time $t \in [0, T]$. Consequently, the option price $V(S,t)$ must satisfy $V(S,t) \ge h(S)$, where $h(S) = (K - S)^+$ is the intrinsic payoff for a put option with strike $K$. This yields a \textbf{Linear Complementarity Problem (LCP)}:
+\begin{equation}
+\min \left( -\frac{\partial V}{\partial t} - \frac{1}{2}\sigma^2 S^2 \frac{\partial^2 V}{\partial S^2} - r S \frac{\partial V}{\partial S} + rV, \quad V(S,t) - h(S) \right) = 0,
+\end{equation}
+subject to terminal and asymptotic boundary conditions:
+\begin{equation}
+V(S, T) = h(S), \quad \lim_{S \to \infty} V(S, t) = 0, \quad V(0, t) = K.
+\end{equation}
+The domain naturally partitions into a \textit{continuation region} (where the PDE holds with equality) and a \textit{stopping region} ($V = h(S)$), separated by the a priori unknown free boundary $S^*(t)$.
+
+\vspace{-0.3em}
+\section{Brief Literature Survey \& Research Gap}
+\begin{itemize}[leftmargin=*, itemsep=0.05em, topsep=0.05em]
+    \item \textbf{Classical Numerical Solvers:} Finite Difference Methods (FDM) discretize space-time grids. Brennan \& Schwartz \cite{brennan1977} and Cryer \cite{cryer1971} developed the Projected Successive Over-Relaxation (PSOR) algorithm combined with implicit Crank-Nicolson schemes. While reliable in 1D, these mesh-based methods scale exponentially $\mathcal{O}(N^d)$, becoming computationally intractable for multi-asset baskets ($d \ge 3$).
+    \item \textbf{Physics-Informed Deep Learning:} Raissi et al. \cite{raissi2019} formalized Physics-Informed Neural Networks (PINNs), embedding differential operators directly into loss functions via Automatic Differentiation (AD). Han et al. \cite{han2018} showed the efficacy of deep learning in overcoming the curse of dimensionality for high-dimensional parabolic PDEs.
+    \item \textbf{The Core Research Gap:} Standard PINNs struggle with variational inequalities due to non-differentiable kinks at $S = K$ and the moving free boundary. Formulating smooth penalty functions and evaluating approximation errors against classical PSOR schemes offers a rigorous, publishable bridge between numerical analysis and deep learning.
+\end{itemize}
+
+\vspace{-0.3em}
+\section{Proposed Methodology}
+
+\subsection{Phase 1: 1D Free-Boundary PINN vs. Crank-Nicolson PSOR (Core Baseline)}
+We construct a deep neural network $V_\theta(S, t)$ parameterized by weights $\theta$. To handle the inequality constraint in a differentiable manner, we formulate a regularized penalty loss over collocation points $\{ (S_i, t_i) \}_{i=1}^{N_c}$:
+\begin{equation}
+\mathcal{L}_{\text{total}}(\theta) = \lambda_{\text{PDE}} \mathcal{L}_{\text{PDE}}(\theta) + \lambda_{\text{early}} \mathcal{L}_{\text{early}}(\theta) + \lambda_{\text{BC}} \mathcal{L}_{\text{BC}}(\theta) + \lambda_{\text{IC}} \mathcal{L}_{\text{IC}}(\theta),
+\end{equation}
+where the early-exercise penalty is given by $\mathcal{L}_{\text{early}}(\theta) = \frac{1}{N_c} \sum_{i=1}^{N_c} \left[ \max\left(0, \, h(S_i) - V_\theta(S_i, t_i)\right) \right]^2$.
+
+\noindent \textbf{Numerical Benchmark:} We will implement a Crank-Nicolson PSOR solver as the ground-truth numerical baseline, evaluating:
+\begin{enumerate}[label=(\roman*), itemsep=0.02em, topsep=0.05em]
+    \item Pointwise relative $L_2$ and $L_\infty$ error across the spatial-temporal domain.
+    \item Accuracy of financial Greeks ($\Delta = \frac{\partial V}{\partial S}, \, \Gamma = \frac{\partial^2 V}{\partial S^2}$) computed via exact AD vs. numerical differentiation.
+    \item Inference latency comparison between iterative PSOR and single forward-pass neural evaluation.
+\end{enumerate}
+
+\subsection{Phase 2: High-Dimensional Multi-Asset Extension (\texorpdfstring{$d = 2, 5, 10$}{d = 2, 5, 10})}
+We extend the framework to $d$-asset basket options governed by the multidimensional coupled operator:
+\begin{equation}
+\mathcal{L}_d V \equiv -\frac{\partial V}{\partial t} - \frac{1}{2}\sum_{i=1}^d \sum_{j=1}^d \rho_{ij}\sigma_i \sigma_j S_i S_j \frac{\partial^2 V}{\partial S_i \partial S_j} - r\sum_{i=1}^d S_i \frac{\partial V}{\partial S_i} + rV.
+\end{equation}
+Because spatial discretization is eliminated, the PINN framework remains computationally tractable across dimensions $d \in \{2, 5, 10\}$, benchmarked against Longstaff-Schwartz Least Squares Monte Carlo (LSM).
+
+\vspace{-0.3em}
+\section{Project Milestones \& Timeline}
+\vspace{-0.2em}
+\begin{table}[h!]
+\centering
+\footnotesize
+\begin{tabularx}{\textwidth}{@{}l X l@{}}
+\toprule
+\textbf{Term / Period} & \textbf{Key Tasks \& Milestones} & \textbf{Expected Deliverable} \\ \midrule
+\textbf{Months 1--2} & Mathematical derivation of LCP \& implementation of 1D PSOR & Verified FDM Baseline Code \\
+\textbf{Months 3--4} & Architecture design, custom penalty loss, \& 1D PINN training & Phase 1 Validation \& Error Analysis \\
+\textbf{Months 5--6} & Multi-asset formulation ($d=2, 5$), Greeks computation \& stability & Phase 2 High-Dim Experiments \\
+\textbf{Months 7--8} & Comprehensive benchmarking, dissertation compilation, \& drafting & Final Thesis \& Manuscript Draft \\ \bottomrule
+\end{tabularx}
+\end{table}
+
+\vspace{-1.2em}
+\begin{thebibliography}{9}
+\footnotesize
+\setlength{\itemsep}{0.05em}
+\bibitem{raissi2019}
+M.~Raissi, P.~Perdikaris, and G.~E. Karniadakis, ``Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations,'' \emph{Journal of Computational Physics}, vol. 378, pp. 686--707, 2019.
+
+\bibitem{han2018}
+J.~Han, A.~Jentzen, and W.~E, ``Solving high-dimensional partial differential equations using deep learning,'' \emph{Proceedings of the National Academy of Sciences (PNAS)}, vol. 115, no. 34, pp. 8505--8510, 2018.
+
+\bibitem{brennan1977}
+M.~J. Brennan and E.~S. Schwartz, ``The valuation of American put options,'' \emph{The Journal of Finance}, vol. 32, no. 2, pp. 449--458, 1977.
+
+\bibitem{cryer1971}
+C.~W. Cryer, ``The method of successive over-relaxation for solving free boundary problems for an elliptic partial differential equation,'' \emph{Journal of the ACM}, vol. 18, no. 1, pp. 109--136, 1971.
+
+\bibitem{black1973}
+F.~Black and M.~Scholes, ``The pricing of options and corporate liabilities,'' \emph{Journal of Political Economy}, vol. 81, no. 3, pp. 637--654, 1973.
+\end{thebibliography}
+
+\end{document}

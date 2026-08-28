@@ -1,0 +1,3 @@
+Model Architecture,Rel L2 Error (%),Max Error (Rs),MAE (Rs),Boundary RMSE (Rs),Eval Latency (ms),Train Time (s)
+Baseline PINN (Standard),1.12,2.60,0.21,5.65,7.98,23.73
+Novel EEP-PINN (Proposed),0.37,0.44,0.08,2.99,11.79,24.50

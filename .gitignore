@@ -1,0 +1,26 @@
+# Python bytecode & caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ipynb_checkpoints/
+
+# LaTeX build artifacts (keep PDFs, ignore auxiliary files)
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Archives & Temporary Caches
+*.zip
+*.tar.gz
+.system_generated/
+scratch/
+

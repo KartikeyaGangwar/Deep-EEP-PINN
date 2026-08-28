@@ -1,0 +1,16 @@
+\begin{table}[h!]
+\centering
+\small
+\caption{Phase 2B Benchmark: 5-Asset Correlated Real-World Arithmetic American Basket Option ($d=5, K=100, T=1.0, r=0.05, \rho=0.40, N_{\text{paths}}=100,000$).}
+\label{tab:arithmetic_benchmarks}
+\begin{tabular}{@{}cccccc@{}}
+\toprule
+\textbf{Spot $S_0$} & \textbf{European Arith MM} & \textbf{Arithmetic LSM (100k)} & \textbf{Novel Arith EEP-PINN} & \textbf{Premium $e_\theta$} & \textbf{Diff vs LSM} \\ \midrule
+\$ 80.0 & \$ 15.96 & \$ 19.95 $\pm$ 0.00 & \$ 19.79 & \$ 3.83 & \$ 0.16 \\
+\$ 90.0 & \$ 8.53 & \$ 10.30 $\pm$ 0.02 & \$ 10.15 & \$ 1.62 & \$ 0.15 \\
+\$ 100.0 & \$ 3.78 & \$ 4.28 $\pm$ 0.02 & \$ 4.24 & \$ 0.46 & \$ 0.04 \\
+\$ 110.0 & \$ 1.40 & \$ 1.53 $\pm$ 0.01 & \$ 1.52 & \$ 0.12 & \$ 0.01 \\
+\$ 120.0 & \$ 0.44 & \$ 0.47 $\pm$ 0.01 & \$ 0.47 & \$ 0.03 & \$ 0.00 \\
+\bottomrule
+\end{tabular}
+\end{table}

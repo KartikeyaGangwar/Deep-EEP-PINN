@@ -1,0 +1,734 @@
+\documentclass[11pt,a4paper,oneside]{book}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=0.8in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts,mathtools}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{hyperref}
+\usepackage{tcolorbox}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{tikz}
+\usepackage{cite}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\setlength{\headheight}{26pt}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue!80!black,
+    citecolor=teal!80!black,
+    urlcolor=magenta!80!black
+}
+
+\tcbuselibrary{skins,breakable}
+
+% Custom Callout Boxes for Intuitive Hinglish Explanations
+\newtcolorbox{intuitionbox}[1]{
+    colback=blue!4!white,
+    colframe=blue!75!black,
+    fonttitle=\bfseries\large,
+    title={Concept \& Deep Intuition: #1},
+    arc=2mm,
+    breakable
+}
+
+\newtcolorbox{mathbox}[1]{
+    colback=green!4!white,
+    colframe=green!50!black,
+    fonttitle=\bfseries\large,
+    title={Mathematical Derivation: #1},
+    arc=2mm,
+    breakable
+}
+
+\newtcolorbox{codebox}[1]{
+    colback=gray!6!white,
+    colframe=gray!75!black,
+    fonttitle=\bfseries\large,
+    title={Code Implementation \& Architecture: #1},
+    arc=2mm,
+    breakable
+}
+
+\newtcolorbox{auditbox}[1]{
+    colback=red!4!white,
+    colframe=red!70!black,
+    fonttitle=\bfseries\large,
+    title={Bug Post-Mortem \& Autograd Audit: #1},
+    arc=2mm,
+    breakable
+}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\slshape Deep-EEP-PINN Research Companion}
+\fancyhead[R]{\slshape \leftmark}
+\fancyfoot[C]{\thepage}
+
+\begin{document}
+
+% =========================================================================
+% TITLE PAGE
+% =========================================================================
+\begin{titlepage}
+    \centering
+    \vspace*{1.5cm}
+    {\Huge \textbf{Deep-EEP-PINN}}\\[0.6em]
+    {\LARGE \textbf{Scientific Machine Learning for Optimal Stopping \& Free-Boundary American Basket Option PDEs}}\\[1.5em]
+    
+    {\Large \textbf{The Ultimate Mathematical \& Code Companion Guide}}\\[0.8em]
+    {\large \textit{First-Principles Derivations, Hinglish Intuition, Autograd Proofs, and 100k-Path Monte Carlo Rigor}}
+    
+    \vspace{2.5cm}
+    \textbf{\Large Author}\\[0.5em]
+    {\large Final-Year B.Sc. (Hons) Mathematics, University of Delhi}\\[0.3em]
+    {\normalsize Specialization: Differential Equations, Numerical Analysis, Computational Finance \& SciML}
+    
+    \vfill
+    {\large \textbf{Academic Year 2025--2026}}\\[0.3em]
+    {\normalsize University of Delhi $\cdot$ Faculty of Mathematical Sciences}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% =========================================================================
+% PREFACE
+% =========================================================================
+\chapter*{Preface: Yeh Book Kyun Likhi Gayi Hai?}
+\addcontentsline{toc}{chapter}{Preface: Yeh Book Kyun Likhi Gayi Hai?}
+
+Jab hum financial mathematics aur scientific machine learning (SciML) ke intersection par American option pricing aur optimal stopping problems ko solve karte hain, toh mostly textbooks ya research papers me equations bina practical intuition ke throw kar di jaati hain. 
+
+Is book ka purpose hai: \textbf{Absolute Zero se lekar High-Dimensional Scientific Machine Learning tak ka har ek step mathematically aur intuitively crystal clear karna}.
+
+\begin{intuitionbox}{Hinglish Language Kyun?}
+Kyuki jab hum concepts ko apni natural soch (natural intuitive language) me padhte hain, toh mathematical rigor ka har ek $dt$, $dW$, gradient $\nabla$, Hessian $H$, aur autograd graph seedha dimag me baith jaata hai. 
+
+Is guide me humne \textbf{Rigorous English Mathematical Formalism} ke saath \textbf{Crystal-Clear Hinglish Explanations} di hain. Is book ko padhne ke baad aapko kisi bhi formula, PDE derivation, loss function, boundary condition, ya PyTorch autograd graph me kabhi koi confusion nahi hoga!
+\end{intuitionbox}
+
+---
+
+% =========================================================================
+% CHAPTER 1
+% =========================================================================
+\chapter{Financial Derivatives \& Stochastic Calculus First Principles}
+
+\section{Derivatives Kya Hote Hain? Call vs Put}
+Financial market me ek \textbf{Derivative} ek aisa contract hota hai jiski value kisi doosre underlying asset (jaise Reliance ka stock, Nifty 50 index, Apple ka share) ke price $S(t)$ par depend karti hai.
+
+\begin{itemize}[leftmargin=1.5em]
+    \item \textbf{Call Option:} Holder ke paas right (haq) hota hai asset ko ek predetermined strike price $K$ par \textbf{BUY} karne ka.
+    \item \textbf{Put Option:} Holder ke paas right hota hai asset ko strike price $K$ par \textbf{SELL} karne ka.
+\end{itemize}
+
+Agar expiry $T$ par stock ka price $S(T)$ hai, toh Put Option holder ka payout hota hai:
+\begin{equation}
+    h(S(T)) = \max(K - S(T), \, 0).
+\end{equation}
+
+\section{European vs American Option: Asli Farak Kya Hai?}
+\begin{enumerate}[leftmargin=1.5em]
+    \item \textbf{European Option:} Holder contract ko sirf aur sirf expiry date $t = T$ par exercise kar sakta hai. Iska mathematical problem ek standard Cauchy parabolic PDE ban jaata hai jisko Black-Scholes (1973) ne exact closed form me solve kar diya.
+    \item \textbf{American Option:} Holder contract ko $t=0$ se lekar $t=T$ ke beech \textbf{kisi bhi stopping time $\tau \in [0, T]$ par early exercise} kar sakta hai!
+\end{enumerate}
+
+\begin{intuitionbox}{Early Exercise Kyun Important Hai?}
+Maan lo aapne Rs.~100 strike price ($K=100$) ka Put option khareeda. Achanak company bankrupt ho gayi aur stock price $S(t) \to 0$ ho gaya. 
+\begin{itemize}
+    \item Agar European option hota, toh aapko expiry $T$ tak intezaar karna padta, jisse time value of money ka loss hota.
+    \item Lekin American option me aap \textbf{turant exercise} karke Rs.~100 cash le loge aur bank me $r$ interest rate par daal doge!
+\end{itemize}
+Is early exercise privilege ki wajah se American Option ki value hamesha European Option se zyada ya barabar hoti hai:
+\begin{equation}
+    V_{\text{American}}(S, t) \ge V_{\text{European}}(S, t) \ge \max(K - S, 0).
+\end{equation}
+\end{intuitionbox}
+
+\section{Geometric Brownian Motion (GBM) \& It\^o's Lemma}
+Real financial markets me stock prices continuously fluctuate karte hain. Hum assume karte hain ki risk-neutral measure $\mathbb{Q}$ ke under stock price Geometric Brownian Motion follow karta hai:
+\begin{equation}
+    dS(t) = r S(t) dt + \sigma S(t) dW(t),
+\end{equation}
+jahan $r$ continuous risk-free rate hai, $\sigma$ volatility hai, aur $W(t)$ standard Brownian motion (Wiener process) hai jisme $\mathbb{E}[dW] = 0$ aur $(dW)^2 = dt$.
+
+\begin{mathbox}{It\^o's Lemma Derivation}
+Maan lo option price $V(S, t)$ ek smooth function hai. Taylor series expansion se:
+\begin{equation}
+    dV = \frac{\partial V}{\partial t} dt + \frac{\partial V}{\partial S} dS + \frac{1}{2}\frac{\partial^2 V}{\partial S^2} (dS)^2 + \dots
+\end{equation}
+Ab $dS = rS dt + \sigma S dW$ ko substitute karte hain aur It\^o's isometry rule $(dW)^2 = dt$, $dt \cdot dW = 0$, $(dt)^2 = 0$ lagate hain:
+\begin{equation}
+    (dS)^2 = (rS dt + \sigma S dW)^2 = \sigma^2 S^2 (dW)^2 = \sigma^2 S^2 dt.
+\end{equation}
+Isse It\^o's Lemma ka general form milta hai:
+\begin{equation}
+    dV = \left( \frac{\partial V}{\partial t} + rS \frac{\partial V}{\partial S} + \frac{1}{2}\sigma^2 S^2 \frac{\partial^2 V}{\partial S^2} \right) dt + \sigma S \frac{\partial V}{\partial S} dW.
+\end{equation}
+\end{mathbox}
+
+\section{Delta-Hedging \& Black-Scholes PDE Operator}
+Black, Scholes (1973) aur Merton (1973) ka revolutionary idea tha: \textbf{Delta-Hedging}.
+
+Hum ek self-financing portfolio banate hain jisme 1 long option $V$ aur $\Delta$ short stock $S$ ho:
+\begin{equation}
+    \Pi = V - \Delta S.
+\end{equation}
+Portfolio me instantaneous change hoga:
+\begin{equation}
+    d\Pi = dV - \Delta dS.
+\end{equation}
+Ab $dV$ aur $dS$ ki value substitute karte hain:
+\begin{equation}
+    d\Pi = \left( \frac{\partial V}{\partial t} + rS \frac{\partial V}{\partial S} + \frac{1}{2}\sigma^2 S^2 \frac{\partial^2 V}{\partial S^2} - \Delta r S \right) dt + \left( \sigma S \frac{\partial V}{\partial S} - \Delta \sigma S \right) dW.
+\end{equation}
+
+\begin{intuitionbox}{Delta-Hedge Kese Risk Khatam Karta Hai?}
+Notice karo $dW$ stochastic randomness hai (unpredictable shock). Agar hum hedge ratio ko precisely choose kar lein:
+\begin{equation}
+    \Delta = \frac{\partial V}{\partial S} \quad (\text{Option Delta})
+\end{equation}
+toh $dW$ ka coefficient exactly \textbf{ZERO} ho jaata hai! Portfolio completely riskless ban jaata hai!
+\end{intuitionbox}
+
+No-Arbitrage principle kehta hai ki agar portfolio completely risk-free hai, toh iska return bank ke risk-free interest rate $r$ ke barabar hona chahiye:
+\begin{equation}
+    d\Pi = r \Pi dt = r \left( V - \frac{\partial V}{\partial S} S \right) dt.
+\end{equation}
+Dono side $dt$ ke coefficients ko equate karne par:
+\begin{equation}
+    \frac{\partial V}{\partial t} + rS \frac{\partial V}{\partial S} + \frac{1}{2}\sigma^2 S^2 \frac{\partial^2 V}{\partial S^2} - rS \frac{\partial V}{\partial S} = rV - rS \frac{\partial V}{\partial S}.
+\end{equation}
+Canceling terms gives the fundamental \textbf{1D Black-Scholes PDE Operator}:
+\begin{equation}
+    \boxed{\mathcal{L}_{\text{BS}} V \equiv \frac{\partial V}{\partial t} + \frac{1}{2}\sigma^2 S^2 \frac{\partial^2 V}{\partial S^2} + rS \frac{\partial V}{\partial S} - rV = 0.}
+\end{equation}
+
+---
+
+% =========================================================================
+% CHAPTER 2
+% =========================================================================
+\chapter{The American Option as an Optimal Stopping \& Obstacle Problem}
+
+\section{Optimal Stopping Formulation}
+American option ka mathematical price optimal stopping time problem hota hai:
+\begin{equation}
+    V(S, t) = \sup_{\tau \in [t, T]} \mathbb{E}^\mathbb{Q} \left[ e^{-r(\tau - t)} h(S(\tau)) \,\Big|\, S(t) = S \right].
+\end{equation}
+Holder ka objective hota hai aisa optimal stopping time $\tau^*$ dhoondhna jo expected discounted payoff ko maximize kare.
+
+\section{The Free Boundary $S^*(t)$ \& Domain Partition}
+American Put option me space-time domain $[0, S_{\max}] \times [0, T]$ do disjoint regions me divide ho jaata hai separated by a moving curve $S^*(t)$ called the \textbf{Free Boundary}:
+
+\begin{enumerate}[leftmargin=1.5em]
+    \item \textbf{Continuation Region $\mathcal{C} = \{(S, t) : S > S^*(t)\}$:}
+    Yahan option ko hold karna exercise karne se behtar hai ($V(S, t) > K - S$). Is region me option Black-Scholes PDE satisfy karta hai:
+    \begin{equation}
+        \mathcal{L}_{\text{BS}} V = 0.
+    \end{equation}
+    \item \textbf{Stopping / Early Exercise Region $\mathcal{S} = \{(S, t) : S \le S^*(t)\}$:}
+    Yahan stock price itna low ho chuka hai ki turant exercise karna optimal hai:
+    \begin{equation}
+        V(S, t) = K - S, \quad \mathcal{L}_{\text{BS}} V \le 0.
+    \end{equation}
+\end{enumerate}
+
+\section{Linear Complementarity Problem (LCP)}
+Pure domain me American option ek variational inequality satisfy karta hai:
+\begin{equation}
+    \boxed{\min \left( -\mathcal{L}_{\text{BS}} V, \quad V(S, t) - (K - S) \right) = 0.}
+\end{equation}
+Iska physical matlab hai:
+\begin{itemize}
+    \item Ya toh $-\mathcal{L}_{\text{BS}} V = 0$ aur $V \ge K - S$ (Continuation Zone).
+    \item Ya toh $V = K - S$ aur $-\mathcal{L}_{\text{BS}} V \ge 0$ (Stopping Zone).
+    \item Dono me se kam se kam ek equality hamesha hold karegi!
+\end{itemize}
+
+\section{Value Matching \& Smooth Pasting (Merton 1973)}
+Moving boundary $S = S^*(t)$ par do boundary conditions hoti hain:
+
+\begin{mathbox}{Merton's Smooth Pasting Proof}
+\begin{enumerate}
+    \item \textbf{Value Matching ($C^0$ Continuity):}
+    \begin{equation}
+        \lim_{S \to S^*(t)^+} V(S, t) = K - S^*(t).
+    \end{equation}
+    \item \textbf{Smooth Pasting ($C^1$ Contact):}
+    \begin{equation}
+        \left. \frac{\partial V}{\partial S} \right|_{S = S^*(t)^+} = -1.0.
+    \end{equation}
+\end{enumerate}
+
+\textbf{Intuition:} Agar slope $\frac{\partial V}{\partial S} > -1$ hota, toh boundary ke thoda left me option curve payoff line $K-S$ ke neeche chala jaata ($V < K-S$), jo ki early exercise condition ko violate karta. 
+Agar $\frac{\partial V}{\partial S} < -1$ hota, toh boundary ko thoda right shift karke higher expected value mil sakti thi, jo $\sup$ optimality ko violate karta. Isliye derivative strictly $-1$ par smoothly paste karta hai!
+\end{mathbox}
+
+---
+
+% =========================================================================
+% CHAPTER 3
+% =========================================================================
+\chapter{Classical Numerical Ground Truths: CN-PSOR \& LSM Monte Carlo}
+
+\section{1D Finite Difference: Crank-Nicolson Scheme}
+Space domain $S \in [0, S_{\max}]$ ko $M=300$ grid points me aur time domain $t \in [0, T]$ ko $N=300$ time steps me discretize karte hain ($\Delta S = S_{\max}/M, \Delta t = T/N$).
+
+Time-reversed variable $\tau = T - t$ (time-to-maturity) use karte hain:
+\begin{equation}
+    \frac{\partial V}{\partial \tau} = \frac{1}{2}\sigma^2 S^2 \frac{\partial^2 V}{\partial S^2} + r S \frac{\partial V}{\partial S} - r V.
+\end{equation}
+Crank-Nicolson scheme second-order accurate hoti hai ($\mathcal{O}(\Delta \tau^2 + \Delta S^2)$):
+\begin{equation}
+    \frac{V^{n+1} - V^n}{\Delta \tau} = \frac{1}{2}\left( \mathcal{D}_{\text{spatial}} V^{n+1} + \mathcal{D}_{\text{spatial}} V^n \right).
+\end{equation}
+Isse tridiagonal matrix equation banti hai:
+\begin{equation}
+    \mathbf{A} \mathbf{V}^{n+1} = \mathbf{B} \mathbf{V}^n + \mathbf{b}^{n+1}, \quad \text{subject to } \mathbf{V}^{n+1} \ge \mathbf{h}.
+\end{equation}
+
+\section{Projected Successive Over-Relaxation (PSOR, Cryer 1971)}
+Matrix $\mathbf{A} \mathbf{V} = \mathbf{RHS}$ subject to $V_j \ge h_j$ ko solve karne ke liye PSOR algorithm har time step par iterate karta hai:
+\begin{equation}
+    V_j^{(k+1)} = \max \left( h_j, \, V_j^{(k)} + \frac{\omega}{A_{jj}} \left( \text{RHS}_j - \sum_{m < j} A_{jm} V_m^{(k+1)} - \sum_{m \ge j} A_{jm} V_m^{(k)} \right) \right),
+\end{equation}
+jahan $\omega \in (1, 2)$ over-relaxation parameter hai (optimal $\omega \approx 1.25$).
+
+\begin{auditbox}{The $S=0$ Boundary Condition Bug \& Fix (Audit C1)}
+Standard textbooks me European Put ke liye boundary condition hoti hai:
+\begin{equation}
+    V_{\text{Euro}}(0, \tau) = K e^{-r\tau}.
+\end{equation}
+Agar American Put solver me ye laga diya jaye, toh ground truth corrupt ho jaati hai! 
+
+Kyun? Kyunki American Put me agar stock zero ho gaya ($S=0$), toh holder $t$ par hi exercise karke $K$ cash le sakta hai. Isliye:
+\begin{equation}
+    \boxed{V_{\text{American}}(0, \tau) \equiv K \quad \forall \tau \in [0, T].}
+\end{equation}
+Hamare codebase me `\texttt{psor\_solver.py}` aur `\texttt{utils.py}` me isko strictly $V=K$ fix kiya gaya, jisse 1D EEP-PINN error \textbf{Rs.~5.55 se drop hokar Rs.~0.43} par aa gaya!
+\end{auditbox}
+
+\section{High-Dimensional Benchmark: Longstaff-Schwartz LSM (2001)}
+Jab dimensions $d \ge 5$ hote hain, Finite Difference grid exponential blowup karti hai:
+\begin{itemize}
+    \item $d=1$: $300^1 = 300$ grid points.
+    \item $d=5$: $300^5 = 2.43 \times 10^{12}$ (2.43 Trillion grid points -- RAM overflow!).
+    \item $d=10$: $300^{10} = 5.9 \times 10^{24}$ grid points (Computationally impossible!).
+\end{itemize}
+Isliye high dimensions me industry standard benchmark \textbf{Longstaff-Schwartz Least Squares Monte Carlo (LSM 2001)} hota hai.
+
+\subsection{100,000-Path Simulation with Antithetic Variates}
+Hum $N_{\text{paths}} = 100,000$ correlated GBM asset paths simulate karte hain Cholesky decomposition $\mathbf{\Sigma} = \mathbf{L}\mathbf{L}^T$ ke through:
+\begin{equation}
+    S_i(t_{k+1}) = S_i(t_k) \exp \left( \left(r - \frac{1}{2}\sigma_i^2\right)\Delta t + \sigma_i \sqrt{\Delta t} (\mathbf{L}\mathbf{Z}_k)_i \right).
+\end{equation}
+Antithetic variates me half paths $\mathbf{Z}$ aur half paths $-\mathbf{Z}$ generate karke Monte Carlo standard error $\mathcal{O}(1/\sqrt{N})$ ko $50\%$ reduce kiya jaata hai.
+
+\subsection{Full Quadratic Cross-Term Regression Basis}
+Expiry $T$ se backward induction karte waqt har step $t_k$ par sirf In-The-Money (ITM) paths par continuation value estimate ki jaati hai via Ordinary Least Squares (OLS):
+\begin{equation}
+    \min_{\boldsymbol{\beta}} \sum_{m \in \text{ITM}} \left( Y_m e^{-r\Delta t} - \sum_{l=1}^P \beta_l \phi_l(\mathbf{S}_m(t_k)) \right)^2.
+\end{equation}
+\begin{itemize}
+    \item \textbf{In 5D ($d=5$):} Full 23-term quadratic basis $\{1, S_i, S_i^2, S_i S_j (i < j), G, G^2\}$.
+    \item \textbf{In 10D ($d=10$):} Full 68-term quadratic polynomial basis $\{1, 10\text{ linear}, 10\text{ squared}, 45\text{ cross-terms } S_i S_j, 2\text{ basket terms}\}$.
+\end{itemize}
+
+---
+
+% =========================================================================
+% CHAPTER 4
+% =========================================================================
+\chapter{Why Standard Baseline PINNs Brutally Fail}
+
+\section{Standard Baseline PINN Formulation}
+Ek naive baseline PINN option price $V(S, t)$ ko single neural network se approximate karta hai:
+\begin{equation}
+    V_\theta(S, t) = \text{Softplus}(\mathcal{N}_\theta(S, t)) \cdot K.
+\end{equation}
+Loss function me standard penalty terms hote hain:
+\begin{equation}
+    \mathcal{L} = w_{\text{pde}} \mathcal{L}_{\text{PDE}} + w_{\text{early}} \mathcal{L}_{\text{early}} + w_{\text{bc}} \mathcal{L}_{\text{BC}} + w_{\text{ic}} \mathcal{L}_{\text{IC}}.
+\end{equation}
+
+\section{The 3 Root Causes of Failure}
+Jab humne Baseline PINN ko train kiya, toh iska Maximum Error \textbf{Rs.~5.55} aaya aur Free Boundary boundary extraction totally fail ho gayi. Iske 3 mathematical root causes hain:
+
+\begin{auditbox}{Root Cause 1: Terminal Payoff Kink Singularity at $t=T$}
+Payoff function $h(S) = \max(K-S, 0)$ ka first derivative $S = K$ par discontinuous hota hai:
+\begin{equation}
+    \frac{\partial h}{\partial S} = \begin{cases} -1 & S < K \\ 0 & S > K \end{cases} \implies \text{Jump Discontinuity at } S=K.
+\end{equation}
+Neural networks continuous smooth functions ($\tanh, \text{GELU}$) use karte hain. Discontinuous ya non-smooth kink ko fit karne par neural network me \textbf{Gibbs Spectral Leakage} create hota hai, jisse expiration ke paas spurious oscillations aati hain.
+\end{auditbox}
+
+\begin{auditbox}{Root Cause 2: Dirac-Delta Gamma Singularity}
+Option ka second spatial derivative $\Gamma(S, t) = \frac{\partial^2 V}{\partial S^2}$ hota hai. Expiry $t \to T$ par:
+\begin{equation}
+    \lim_{t \to T} \Gamma(S, t) = \delta(S - K) \quad (\text{Dirac Delta Function} \to \infty).
+\end{equation}
+Automatic differentiation jab PDE loss $\mathcal{L}_{\text{PDE}} = \partial_t V + \frac{1}{2}\sigma^2 S^2 \partial_{SS} V + \dots$ compute karti hai, toh $(K, T)$ ke paas gradients blow up ho jaate hain ($\Gamma \to 10^5$), jisse optimization destabilize ho jaata hai!
+\end{auditbox}
+
+\begin{auditbox}{Root Cause 3: Wasted Neural Capacity}
+Option value ka 95\% part standard European curvature hota hai jo closed-form Black-Scholes formula se pehle se pata hai. Baseline PINN me network apni 95\% capacity is basic curvature ko re-learn karne me barbad kar deta hai, aur actual moving free boundary interface $S^*(t)$ ko resolve karne ke liye precision bachti hi nahi!
+\end{auditbox}
+
+---
+
+% =========================================================================
+% CHAPTER 5
+% =========================================================================
+\chapter{The Novel EEP-PINN Architecture (1D Derivation \& Proofs)}
+
+\section{Kim (1990) / Carr-Jarrow-Myneni (1992) Analytical Decomposition}
+Hamari key insight thi ki American Option price ko do components me split kiya jaye:
+\begin{equation}
+    \boxed{V_{\text{American}}(S, t) = V_{\text{European}}^{\text{exact}}(S, t) + e_\theta(S, t)}
+\end{equation}
+jahan $V_{\text{European}}^{\text{exact}}(S, t)$ Black-Scholes exact closed-form formula hai, aur $e_\theta(S, t)$ \textbf{Early-Exercise Premium} hai.
+
+\begin{mathbox}{Exact Black-Scholes European Formula}
+\begin{equation}
+    V_{\text{Euro}}^{\text{exact}}(S, t) = K e^{-r(T-t)} \mathcal{N}(-d_2) - S \mathcal{N}(-d_1),
+\end{equation}
+\begin{equation}
+    d_1 = \frac{\ln(S/K) + \left(r + \frac{1}{2}\sigma^2\right)(T-t)}{\sigma \sqrt{T-t}}, \quad d_2 = d_1 - \sigma \sqrt{T-t}.
+\end{equation}
+\end{mathbox}
+
+\section{Exact Boundary Hard-Constraint Ansatz}
+Hum Early Exercise Premium $e_\theta(S, t)$ ko directly train nahi karte, balki mathematically hard-coded boundary factors embed karte hain:
+\begin{equation}
+    \boxed{e_\theta(S, t) = \text{Softplus}\left(\mathcal{N}_\theta(S, t)\right) \cdot \left(\frac{T-t}{T}\right) \cdot \left(1 - \frac{S}{S_{\max}}\right) \cdot K\left(1 - e^{-rT}\right).}
+\end{equation}
+
+\begin{intuitionbox}{Hard Boundary Encodings Ke 3 Superpowers}
+\begin{enumerate}
+    \item \textbf{Strict Zero-Kink Theorem ($t=T$):} Jab $t \to T$, factor $\frac{T-t}{T} \to 0$. Iska matlab $e_\theta(S, T) \equiv 0$ strictly holds! Expiration kink 100\% Black-Scholes exact formula absorb kar leta hai. \textbf{Zero Gibbs oscillations!}
+    \item \textbf{Far-Field Vanishing ($S \to S_{\max}$):} Factor $1 - S/S_{\max} \to 0$. Out-of-the-money boundary condition automatically strictly satisfied!
+    \item \textbf{Scale Compression ($20\times$):} $V(S, t) \in [0, 100]$ fit karne ki jagah network sirf $e(S, t) \in [0, 4.88]$ fit karta hai. Dynamic range $20\times$ choti ho gayi, jisse accuracy 10x improve ho gayi!
+\end{enumerate}
+\end{intuitionbox}
+
+\section{Exact Analytical Hybrid Greeks Formulation}
+Financial institutions ke liye option price se zyada uske risk sensitivities (Greeks: Delta $\Delta$, Gamma $\Gamma$) critical hote hain:
+\begin{equation}
+    \Delta_{\text{American}} = \frac{\partial V_{\text{Amer}}}{\partial S} = \Delta_{\text{Euro}}^{\text{exact}}(S, t) + \frac{\partial e_\theta}{\partial S},
+\end{equation}
+\begin{equation}
+    \Gamma_{\text{American}} = \frac{\partial^2 V_{\text{Amer}}}{\partial S^2} = \Gamma_{\text{Euro}}^{\text{exact}}(S, t) + \frac{\partial^2 e_\theta}{\partial S^2}.
+\end{equation}
+Delta aur Gamma ka major singular part exact analytical formula se aata hai ($\Delta_{\text{Euro}} = -\mathcal{N}(-d_1)$, $\Gamma_{\text{Euro}} = \frac{\phi(d_1)}{S\sigma\sqrt{\tau}}$), jabki neural network sirf smooth premium correction deta hai!
+
+\section{PDE Residual \& Loss Function with Smooth Sigmoid Mask}
+Early exercise premium $e(S, t)$ continuation region me Black-Scholes PDE satisfy karta hai:
+\begin{equation}
+    \mathcal{L}_{\text{BS}}(e) = \frac{\partial e}{\partial t} + \frac{1}{2}\sigma^2 S^2 \frac{\partial^2 e}{\partial S^2} + r S \frac{\partial e}{\partial S} - r e = 0.
+\end{equation}
+American obstacle target premium par transform ho jaata hai:
+\begin{equation}
+    h_e(S, t) = \max\left( \max(K-S, 0) - V_{\text{Euro}}^{\text{exact}}(S, t), \, 0 \right).
+\end{equation}
+
+Smooth differentiable continuation mask use kiya jaata hai:
+\begin{equation}
+    M_{\text{cont}} = \text{Sigmoid}\left( 20.0 \cdot (e - h_e) \right).
+\end{equation}
+Total loss Kendall-Gal (2017) homoscedastic uncertainty log-variance parameters $\mathbf{s} = (s_1, s_2, s_3, s_4)$ ke saath balance hoti hai:
+\begin{equation}
+    \mathcal{L}_{\text{total}} = \sum_{k=1}^4 \left( e^{-s_k} \mathcal{L}_k + \frac{1}{2} s_k \right).
+\end{equation}
+
+---
+
+% =========================================================================
+% CHAPTER 6
+% =========================================================================
+\chapter{Multi-Asset Geometric Basket Options ($d=5 \to 10$)}
+
+\section{Multi-Asset Geometric Basket Mechanics}
+Multi-asset basket options me option payout $d$ underlying correlated assets par depend karta hai.
+Geometric basket index define hota hai as weighted geometric mean:
+\begin{equation}
+    G(\mathbf{S}) = \prod_{i=1}^d S_i^{w_i}, \quad \text{where } \sum_{i=1}^d w_i = 1.
+\end{equation}
+Logarithm lene par:
+\begin{equation}
+    \ln G(\mathbf{S}) = \sum_{i=1}^d w_i \ln S_i.
+\end{equation}
+Kyunki $\ln S_i$ normal distribution follow karta hai, linear combination of normals is strictly normal! Isliye Geometric Basket Index $G(\mathbf{S})$ exactly log-normal distribution follow karta hai with effective volatility $\sigma_G$:
+\begin{equation}
+    \sigma_G^2 = \mathbf{w}^T \mathbf{\Sigma} \mathbf{w} = \sum_{i=1}^d \sum_{j=1}^d w_i w_j \rho_{ij} \sigma_i \sigma_j.
+\end{equation}
+Dividend-like drift correction $q_G$:
+\begin{equation}
+    q_G = \frac{1}{2}\sum_{i=1}^d w_i \sigma_i^2 - \frac{1}{2}\sigma_G^2.
+\end{equation}
+Exact European formula:
+\begin{equation}
+    V_{\text{Euro}}^{\text{geom}}(\mathbf{S}, t) = K e^{-r(T-t)} \mathcal{N}(-d_2) - G(\mathbf{S}) e^{-q_G(T-t)} \mathcal{N}(-d_1).
+\end{equation}
+
+\section{High-Dimensional Hessian Trace Autograd Contraction}
+$d$-dimensional Black-Scholes PDE operator me second-order diffusion term hota hai:
+\begin{equation}
+    \text{Diffusion} = \frac{1}{2}\sum_{i=1}^d \sum_{j=1}^d \rho_{ij} \sigma_i \sigma_j S_i S_j \frac{\partial^2 e}{\partial S_i \partial S_j}.
+\end{equation}
+Agar hum full $d \times d$ Hessian matrix explicitly compute karein ($d=10 \implies 100$ autograd passes), GPU memory explode ho jayegi.
+
+\begin{codebox}{Hessian Trace Contraction Vectorization}
+Hum loop me sirf $d$ directional gradients compute karte hain:
+\begin{verbatim}
+diffusion = torch.zeros_like(e)
+for i in range(self.d):
+    g_i = grad_S[:, i:i+1]
+    H_i = torch.autograd.grad(outputs=g_i, inputs=S_int, 
+                              grad_outputs=torch.ones_like(g_i), 
+                              create_graph=True)[0]
+    cov_row_i = self.cov_matrix[i, :]
+    weighted_H = torch.sum(H_i * (cov_row_i * S_int), dim=1, keepdim=True)
+    diffusion += 0.5 * S_int[:, i:i+1] * weighted_H
+\end{verbatim}
+Is contraction se $d=10$ me 100 autograd passes ki jagah sirf \textbf{10 passes} lagte hain!
+\end{codebox}
+
+\section{Correlated Moneyness Ray Sampling}
+\begin{intuitionbox}{Why Uniform Sampling Fails in High Dimensions}
+High dimensions ($d \ge 5$) me agar hum uniform hypercube $S_i \sim \mathcal{U}[0, S_{\max}]$ sample karte hain, toh \textbf{Law of Large Numbers} ki wajah se average $G = (\prod S_i)^{1/d}$ center point $\approx 125$ ke paas concentrate ho jaati hai ($G < K=100$ ka deep ITM region almost completely empty reh jaata hai!).
+
+Isliye hum \textbf{Tri-Modal Sampling} use karte hain:
+\begin{enumerate}
+    \item 1/3 Uniform Hypercube $[0, S_{\max}]$.
+    \item 1/3 Strike-Concentrated near $[0.4K, 1.6K]$.
+    \item 1/3 Correlated Moneyness Rays: Base spot $S_0 \in [20, 250]$ generate karke correlated drift-diffusion perturbations $S_i = S_0 \exp(\sigma_i \sqrt{T} Z_i)$ multiply karte hain.
+\end{enumerate}
+Isse deep ITM se deep OTM tak har stopping region densely sample hota hai!
+\end{intuitionbox}
+
+---
+
+% =========================================================================
+% CHAPTER 7
+% =========================================================================
+\chapter{Real-World Arithmetic Basket Options ($d=5$)}
+
+\section{The Real-World Financial Market Reality}
+Wall Street, NSE, CBOE aur OTC institutional markets me \textbf{100\% traded basket options Arithmetic Baskets hote hain}:
+\begin{equation}
+    h_{\text{arith}}(\mathbf{S}) = \max\left( K - \sum_{i=1}^d w_i S_i, \, 0 \right).
+\end{equation}
+Indices jaise Nifty 50, Bank Nifty, S\&P 500, Dow Jones sabhi weighted arithmetic sums hote hain.
+
+\section{The Non-Lognormal Sum Problem}
+Jab assets $S_i$ lognormal GBM follow karte hain:
+\begin{equation}
+    B(t) = \sum_{i=1}^d w_i S_i(t) = \sum_{i=1}^d w_i S_i(0) \exp\left( \left(r - \frac{1}{2}\sigma_i^2\right)t + \sigma_i W_i(t) \right).
+\end{equation}
+Lognormal random variables ka sum \textbf{lognormal NAHI hota}! Iska koi closed-form probability density function exist nahi karta, isliye exact analytical European formula mathematically impossible hai.
+
+\section{Gentle (1993) / Milevsky-Posner (1998) Moment-Matching Anchor}
+Hamara breakthrough idea tha: Hum Gentle (1993) / Milevsky-Posner (1998) moment matching use karke exact analytical anchor banate hain:
+
+\begin{mathbox}{Moment Matching Derivation}
+Risk-neutral measure $\mathbb{Q}$ ke under arithmetic sum $B(T)$ ke first two theoretical moments compute karte hain:
+\begin{enumerate}
+    \item \textbf{First Theoretical Moment ($M_1$):}
+    \begin{equation}
+        M_1(t) = \mathbb{E}^\mathbb{Q}[B(T) \mid \mathcal{F}_t] = \sum_{i=1}^d w_i S_i(t) e^{r(T-t)} = e^{r(T-t)} B(t).
+    \end{equation}
+    \item \textbf{Second Theoretical Moment ($M_2$):}
+    \begin{equation}
+        M_2(t) = \mathbb{E}^\mathbb{Q}[B(T)^2 \mid \mathcal{F}_t] = \sum_{i=1}^d \sum_{j=1}^d w_i w_j S_i(t) S_j(t) \exp\left( (2r + \rho_{ij}\sigma_i\sigma_j)(T-t) \right).
+    \end{equation}
+    \item \textbf{Effective Log-Normal Volatility ($\sigma_A$):}
+    \begin{equation}
+        \sigma_A^2(t) = \frac{1}{T-t} \ln \left( \frac{M_2(t)}{M_1(t)^2} \right).
+    \end{equation}
+    \item \textbf{Analytical European Arithmetic Anchor:}
+    \begin{equation}
+        \boxed{V_{\text{Euro}}^{\text{arith, MM}}(\mathbf{S}, t) = K e^{-r(T-t)} \mathcal{N}(-d_2) - B(t) \mathcal{N}(-d_1),}
+    \end{equation}
+    where $d_1 = \frac{\ln(B(t)/K) + \left(r + \frac{1}{2}\sigma_A^2\right)(T-t)}{\sigma_A \sqrt{T-t}}$ and $d_2 = d_1 - \sigma_A \sqrt{T-t}$.
+\end{enumerate}
+\end{mathbox}
+
+\begin{intuitionbox}{Zero-Kink Theorem Preservation for Arithmetic Baskets}
+At expiration $t \to T$ ($\tau \to 0$):
+\begin{equation}
+    \lim_{t \to T} V_{\text{Euro}}^{\text{arith, MM}}(\mathbf{S}, T) \equiv \max\left( K - \sum_{i=1}^d w_i S_i, \, 0 \right).
+\end{equation}
+Iska matlab moment-matched European formula expiration payoff kink ko $100\%$ absorb kar leta hai!
+Therefore:
+\begin{equation}
+    \boxed{e_\theta(\mathbf{S}, T) \equiv 0 \quad \text{strictly holds for Arithmetic Baskets as well!}}
+\end{equation}
+\end{intuitionbox}
+
+---
+
+% =========================================================================
+% CHAPTER 8
+% =========================================================================
+\chapter{Deep Code Architecture, Autograd Post-Mortem \& Bug Audits}
+
+\section{The $x^{1/d}$ Fractional Power NaN Bug (Deep Audit C7)}
+\begin{auditbox}{Mathematical Diagnosis of NaN in 10D}
+Pehle boundary factor code me ye likha tha:
+\begin{verbatim}
+spatial_factor = torch.prod(torch.clamp(1.0 - S_norm, min=0.0), 
+                            dim=1, keepdim=True) ** (1.0 / self.d)
+\end{verbatim}
+Jab koi collocation point $S_i \ge S_{\max}$ hota hai, toh clamped value $0.0$ ban jaati hai. 
+Forward pass me $0^{1/10} = 0$. Lekin PyTorch autograd jab second derivative compute karta hai:
+\begin{equation}
+    \frac{d}{dx} x^{0.1} = 0.1 \cdot x^{-0.9} = \frac{0.1}{x^{0.9}} \xrightarrow{x \to 0} +\infty \implies \mathbf{NaN},
+\end{equation}
+\begin{equation}
+    \frac{d^2}{dx^2} x^{0.1} = -0.09 \cdot x^{-1.9} = -\frac{0.09}{x^{1.9}} \xrightarrow{x \to 0} -\infty \implies \mathbf{NaN}.
+\end{equation}
+Is infinite derivative ki wajah se backward graph me first step par hi loss `NaN` ho gaya tha!
+\end{auditbox}
+
+\begin{codebox}{The Dimension-Invariant Basket Coordinate Fix}
+Humne fractional power $x^{1/d}$ ko hatakar basket state coordinate use kiya:
+\begin{itemize}
+    \item \textbf{Geometric Basket ($d=10$):}
+    \begin{verbatim}
+log_S = torch.log(torch.clamp(S_tensor, min=1e-8))
+G_val = torch.exp(torch.matmul(log_S, self.weights_tensor))
+spatial_factor = torch.clamp(1.0 - G_val / self.S_max, min=0.0)
+    \end{verbatim}
+    Derivative: $\frac{\partial G}{\partial S_i} = \frac{w_i G}{S_i}$, which is strictly smooth, finite, and $C^\infty$ on $(0, \infty)$!
+    \item \textbf{Arithmetic Basket ($d=5$):}
+    \begin{verbatim}
+B_val = torch.sum(S_tensor * self.weights_tensor, dim=1, keepdim=True)
+spatial_factor = torch.clamp(1.0 - B_val / self.S_max, min=0.0)
+    \end{verbatim}
+    Derivative is constant $w_i$, strictly stable and bounded!
+\end{itemize}
+\end{codebox}
+
+\section{Detached Obstacle Target Graphs (Audit C5)}
+\begin{codebox}{Why torch.no\_grad() is Critical for Obstacle Target}
+Agar obstacle target $h_e = \max(\text{payoff} - V_{\text{Euro}}, 0)$ ko autograd graph se detach na kiya jaye, toh PyTorch $\nabla h_e$ ke gradient ko bhi network weights par backpropagate kar dega:
+\begin{verbatim}
+with torch.no_grad():
+    V_euro = torch_multi_asset_geometric_put(S_int, t_int, self.cfg)
+    log_S = torch.log(torch.clamp(S_int, min=1e-8))
+    G_int = torch.exp(torch.matmul(log_S, self.weights))
+    payoff = torch.clamp(self.cfg.K - G_int, min=0.0)
+    h_e = torch.clamp(payoff - V_euro, min=0.0)
+\end{verbatim}
+Detaching guarantees that $h_e$ acts as a pure fixed obstacle target.
+\end{codebox}
+
+---
+
+% =========================================================================
+% CHAPTER 9
+% =========================================================================
+\chapter{The 100k-Path Master Benchmarks \& Kaggle Deployment Guide}
+
+\section{Master Quantitative Benchmarks (100,000-Path Rigor)}
+
+\subsection{Phase 1: 1D American Option Free-Boundary Problem}
+\begin{table}[htbp]
+\centering
+\small
+\caption{Phase 1: 1D American Option Benchmark Results (90,000 grid points on Tesla P100).}
+\begin{tabularx}{\textwidth}{@{}l c c c c c c@{}}
+\toprule
+\textbf{Model Architecture} & \textbf{Rel. $L_2$ Error} & \textbf{Max Error} & \textbf{MAE} & \textbf{Boundary RMSE} & \textbf{Latency} & \textbf{Speedup} \\ \midrule
+Crank-Nicolson PSOR (Ground Truth) & Benchmark & Benchmark & Benchmark & Benchmark & $1149.78\text{ ms}$ & $1.0\times$ \\
+Baseline Single-Network Penalty PINN & $3.86\%$ & Rs.~$7.63$ & Rs.~$0.97$ & Rs.~$5.17$ & $8.00\text{ ms}$ & $143.7\times$ \\
+\textbf{Novel EEP-PINN (1D Proposed)} & \textbf{0.37\%} & \textbf{Rs.~0.43 (43 paise)} & \textbf{Rs.~0.08 (8 paise)} & \textbf{Rs.~2.93} & \textbf{11.84 ms} & \textbf{97.1$\times$} \\ \bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Phase 2A: 5-Asset Geometric American Basket Option ($d=5, \rho=0.40$)}
+\begin{table}[htbp]
+\centering
+\small
+\caption{Phase 2A: 5-Asset Geometric Basket Benchmark ($d=5$, 100k paths, 23-term quadratic basis).}
+\begin{tabularx}{\textwidth}{@{}l c c c c c@{}}
+\toprule
+\textbf{Spot Price $S_{0,i}$} & \textbf{European Exact} & \textbf{LSM Monte Carlo (100k)} & \textbf{Novel Geometric EEP-PINN} & \textbf{Diff vs LSM} \\ \midrule
+Rs.~$80.0$ (Deep ITM) & Rs.~$16.70$ & Rs.~$19.96 \pm 0.00$ & Rs.~$19.80$ & Rs.~$0.16$ \\
+Rs.~$90.0$ (ITM) & Rs.~$9.13$ & Rs.~$10.47 \pm 0.02$ & Rs.~$10.36$ & Rs.~$0.11$ \\
+Rs.~$100.0$ (At-The-Money) & Rs.~$4.16$ & Rs.~$4.55 \pm 0.02$ & Rs.~$4.49$ & \textbf{Rs.~0.06 (6 paise)} \\
+Rs.~$110.0$ (OTM) & Rs.~$1.58$ & Rs.~$1.69 \pm 0.01$ & Rs.~$1.66$ & \textbf{Rs.~0.04 (4 paise)} \\
+Rs.~$120.0$ (Deep OTM) & Rs.~$0.52$ & Rs.~$0.55 \pm 0.01$ & Rs.~$0.53$ & \textbf{Rs.~0.02 (2 paise)} \\ \bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Phase 2B: Real-World 5-Asset Arithmetic American Basket Option ($d=5, \rho=0.40$)}
+\begin{table}[htbp]
+\centering
+\small
+\caption{Phase 2B: Real-World 5-Asset Arithmetic Basket Benchmark ($d=5$, 100k paths, $\max(K - \sum w_i S_i, 0)$).}
+\begin{tabularx}{\textwidth}{@{}l c c c c c@{}}
+\toprule
+\textbf{Spot Price $S_{0,i}$} & \textbf{European Arith MM} & \textbf{Arithmetic LSM (100k)} & \textbf{Novel Arithmetic EEP-PINN} & \textbf{Diff vs LSM} \\ \midrule
+Rs.~$80.0$ (Deep ITM) & Rs.~$15.96$ & Rs.~$19.95 \pm 0.00$ & Rs.~$19.79$ & \textbf{Rs.~0.16} \\
+Rs.~$90.0$ (ITM) & Rs.~$8.53$ & Rs.~$10.28 \pm 0.02$ & Rs.~$10.14$ & \textbf{Rs.~0.14} \\
+Rs.~$100.0$ (At-The-Money) & Rs.~$3.78$ & Rs.~$4.26 \pm 0.02$ & Rs.~$4.24$ & \textbf{Rs.~0.02 (2 paise)} \\
+Rs.~$110.0$ (OTM) & Rs.~$1.40$ & Rs.~$1.53 \pm 0.01$ & Rs.~$1.52$ & \textbf{Rs.~0.02 (2 paise)} \\
+Rs.~$120.0$ (Deep OTM) & Rs.~$0.44$ & Rs.~$0.47 \pm 0.01$ & Rs.~$0.47$ & \textbf{Rs.~0.00 (0 paise!)} \\ \bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Phase 3: 10-Asset High-Dimensional Correlated Basket Option ($d=10, \rho=0.35$)}
+\begin{table}[htbp]
+\centering
+\small
+\caption{Phase 3: 10-Asset High-Dimensional Basket Benchmark ($d=10$, 100k paths, 68-term quadratic basis).}
+\begin{tabularx}{\textwidth}{@{}l c c c c c@{}}
+\toprule
+\textbf{Spot Price $S_{0,i}$} & \textbf{European Exact} & \textbf{LSM Monte Carlo (100k)} & \textbf{Novel High-Dim EEP-PINN} & \textbf{Diff vs LSM} \\ \midrule
+Rs.~$80.0$ (Deep ITM) & Rs.~$16.61$ & Rs.~$19.96 \pm 0.00$ & Rs.~$19.85$ & Rs.~$0.11$ \\
+Rs.~$90.0$ (ITM) & Rs.~$8.71$ & Rs.~$10.18 \pm 0.01$ & Rs.~$10.31$ & Rs.~$0.13$ \\
+Rs.~$100.0$ (At-The-Money) & Rs.~$3.61$ & Rs.~$3.99 \pm 0.02$ & Rs.~$4.15$ & Rs.~$0.16$ \\
+Rs.~$110.0$ (OTM) & Rs.~$1.18$ & Rs.~$1.29 \pm 0.01$ & Rs.~$1.43$ & Rs.~$0.15$ \\
+Rs.~$120.0$ (Deep OTM) & Rs.~$0.31$ & Rs.~$0.33 \pm 0.00$ & Rs.~$0.48$ & Rs.~$0.15$ \\ \bottomrule
+\end{tabularx}
+\end{table}
+
+\section{How to Execute on Kaggle GPU in 1 Click}
+Kaggle par code run karna extremely simple hai:
+
+\begin{codebox}{Kaggle Notebook Execution Commands}
+\begin{verbatim}
+# Step 1: Clone repo ya upload dataset
+!git clone <your-github-repo-url>
+%cd "black scholes - neural net"
+
+# Step 2: Run All 4 Master Stages (100k paths each)
+!python run_all_benchmarks.py --all
+
+# Or Run Individual Benchmarks:
+!python run_all_benchmarks.py --phase 1    # 1D Free Boundary vs PSOR
+!python run_all_benchmarks.py --phase 2a   # 5D Geometric Basket vs 100k LSM
+!python run_all_benchmarks.py --phase 2b   # 5D Arithmetic Basket vs 100k LSM
+!python run_all_benchmarks.py --phase 3    # 10D High-Dim Basket vs 100k LSM
+\end{verbatim}
+\end{codebox}
+
+\begin{thebibliography}{99}
+\bibitem{black1973pricing} F.~Black and M.~Scholes, ``The pricing of options and corporate liabilities,'' \emph{Journal of Political Economy}, vol.~81, no.~3, pp.~637--654, 1973.
+\bibitem{merton1973theory} R.~C.~Merton, ``Theory of rational option pricing,'' \emph{The Bell Journal of Economics and Management Science}, vol.~4, no.~1, pp.~141--183, 1973.
+\bibitem{kim1990analytic} I.~J.~Kim, ``The analytic valuation of American options,'' \emph{The Review of Financial Studies}, vol.~3, no.~4, pp.~547--572, 1990.
+\bibitem{carr1992alternative} P.~Carr, R.~Jarrow, and R.~Myneni, ``Alternative methods for valuing American options,'' \emph{Finance and Stochastics}, vol.~2, no.~1, pp.~87--106, 1992.
+\bibitem{gentle1993basket} D.~Gentle, ``Basket options,'' \emph{Risk}, vol.~6, no.~12, pp.~51--52, 1993.
+\bibitem{milevsky1998valuing} M.~A.~Milevsky and S.~E.~Posner, ``Valuing exotic options by approximating the swapping density: The case of arithmetic Asian and basket options,'' \emph{Journal of Financial and Quantitative Analysis}, vol.~33, no.~3, pp.~409--425, 1998.
+\bibitem{longstaff2001valuing} F.~A.~Longstaff and E.~S.~Schwartz, ``Valuing American options by simulation: A simple least-squares approach,'' \emph{The Review of Financial Studies}, vol.~14, no.~1, pp.~113--147, 2001.
+\bibitem{raissi2019physics} M.~Raissi, P.~Perdikaris, and G.~E.~Karniadakis, ``Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations,'' \emph{Journal of Computational Physics}, vol.~378, pp.~686--707, 2019.
+\bibitem{cuomo2022scientific} S.~Cuomo et al., ``Scientific machine learning through physics-informed neural networks: Where we are and what's next,'' \emph{Journal of Scientific Computing}, vol.~92, no.~3, p.~88, 2022.
+\bibitem{cryer1971solution} C.~W.~Cryer, ``The solution of a quadratic programming problem using systematic overrelaxation,'' \emph{SIAM Journal on Control}, vol.~9, no.~3, pp.~385--392, 1971.
+\bibitem{kendall2017uncertainties} A.~Kendall and Y.~Gal, ``What uncertainties do we need in Bayesian deep learning for computer vision?'' \emph{Advances in Neural Information Processing Systems (NeurIPS)}, vol.~30, 2017.
+\end{thebibliography}
+
+\end{document}
