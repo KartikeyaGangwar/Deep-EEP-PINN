@@ -3,9 +3,9 @@
 ## An Analytical Early-Exercise Premium Physics-Informed Neural Network (EEP-PINN) for 1D, 5D Geometric, and 5D Real-World Arithmetic American Basket Options
 
 **Author:** Kartikey Singh  
-**Affiliation:** Department of Mathematics, University of Delhi, Delhi, India  
-**Email:** kartikeysingh525@protonmail.com  
-**Specialization:** Differential Equations, Numerical Analysis, Computational Finance & Scientific Machine Learning  
+**Affiliation:** Department of Mathematics, University of Delhi  
+**Email:** [kartikeysingh525@protonmail.com](mailto:kartikeysingh525@protonmail.com)  
+**Repository:** [https://github.com/KartikeyaGangwar/Deep-EEP-PINN](https://github.com/KartikeyaGangwar/Deep-EEP-PINN)  
 
 ---
 
@@ -91,7 +91,7 @@ $$V_j^{(k+1)} = \max \left( h_j, \, V_j^{(k)} + \frac{\omega}{A_{jj}} \left( b_j
 Parameterization: $V_\theta(S, t) = \text{Softplus}(\mathcal{N}_\theta) \cdot K$.  
 Loss: $\mathcal{L}_{\text{total}} = w_{\text{pde}} \mathcal{L}_{\text{PDE}} + w_{\text{early}} \mathcal{L}_{\text{early}} + w_{\text{bc}} \mathcal{L}_{\text{BC}} + w_{\text{ic}} \mathcal{L}_{\text{IC}}$.
 
-### Why it Failed (Max Error = ₹5.46):
+### Why it Failed (Max Error = $5.46):
 1. **Payoff Kink Singularity:** Expiry corner $\max(K-S, 0)$ induces **Gibbs Spectral Leakage** with smooth activations.
 2. **Dirac-Delta Gamma Singularity:** $\Gamma = \partial_{SS} V \to \delta(S-K)$ blows up autograd gradients near $(K, T)$.
 3. **Wasted Capacity:** 95% of neurons re-learn known European curvature.
@@ -156,11 +156,11 @@ Therefore, $\mathbf{e_\theta(\mathbf{S}, T) \equiv 0}$ strictly by mathematical 
 ### B. Phase 2A: 5-Asset Geometric Basket Option ($d=5, \rho=0.40$, 100k-Path 23-Basis LSM)
 | Spot Price $S_{0,i}$ | European Exact | LSM Monte Carlo ($100\text{k}$) | Novel Geometric EEP-PINN | Difference vs LSM |
 | :---: | :---: | :---: | :---: | :---: |
-| **$80.0 (Deep ITM)** | $\$16.70$ | $\$19.96 \pm 0.00$ | **$\$19.80$** | $\$0.16$ |
-| **$90.0 (ITM)** | $\$9.13$ | $\$10.47 \pm 0.02$ | **$\$10.36$** | $\$0.11$ |
-| **$100.0 (ATM)** | $\$4.16$ | $\$4.55 \pm 0.02$ | **$\$4.49$** | **$\$0.06$** |
-| **$110.0 (OTM)** | $\$1.58$ | $\$1.69 \pm 0.01$ | **$\$1.66$** | **$\$0.04$** |
-| **$120.0 (Deep OTM)** | $\$0.52$ | $\$0.55 \pm 0.01$ | **$\$0.53$** | **$\$0.02$** |
+| **$80.0 (Deep ITM)** | $16.70 | $\$19.96 \pm 0.00$ | **$19.80** | $0.16 |
+| **$90.0 (ITM)** | $9.13 | $\$10.47 \pm 0.02$ | **$10.36** | $0.11 |
+| **$100.0 (ATM)** | $4.16 | $\$4.55 \pm 0.02$ | **$4.49** | **$0.06** |
+| **$110.0 (OTM)** | $1.58 | $\$1.69 \pm 0.01$ | **$1.66** | **$0.04** |
+| **$120.0 (Deep OTM)** | $0.52 | $\$0.55 \pm 0.01$ | **$0.53** | **$0.02** |
 
 * **Speedup:** **$2712.2\times$ faster** ($3.50\text{ ms}$ vs. $9484.37\text{ ms}$).
 * **Mean Absolute Difference vs LSM:** **$\$0.08$** across all moneyness regimes.
@@ -170,11 +170,11 @@ Therefore, $\mathbf{e_\theta(\mathbf{S}, T) \equiv 0}$ strictly by mathematical 
 ### C. Phase 2B: Real-World 5-Asset Arithmetic Basket Option ($d=5, \rho=0.40$, 100k-Path 23-Basis LSM)
 | Spot Price $S_{0,i}$ | European Arith MM | Arithmetic LSM ($100\text{k}$) | Novel Arithmetic EEP-PINN | Difference vs LSM |
 | :---: | :---: | :---: | :---: | :---: |
-| **$80.0 (Deep ITM)** | $\$15.96$ | $\$19.95 \pm 0.00$ | **$\$19.79$** | $\$0.16$ |
-| **$90.0 (ITM)** | $\$8.53$ | $\$10.28 \pm 0.02$ | **$\$10.14$** | $\$0.14$ |
-| **$100.0 (ATM)** | $\$3.78$ | $\$4.26 \pm 0.02$ | **$\$4.24$** | **$\$0.02$** |
-| **$110.0 (OTM)** | $\$1.40$ | $\$1.53 \pm 0.01$ | **$\$1.52$** | **$\$0.02$** |
-| **$120.0 (Deep OTM)** | $\$0.44$ | $\$0.47 \pm 0.01$ | **$\$0.47$** | **$\$0.00$** |
+| **$80.0 (Deep ITM)** | $15.96 | $\$19.95 \pm 0.00$ | **$19.79** | $0.16 |
+| **$90.0 (ITM)** | $8.53 | $\$10.28 \pm 0.02$ | **$10.14** | $0.14 |
+| **$100.0 (ATM)** | $3.78 | $\$4.26 \pm 0.02$ | **$4.24** | **$0.02** |
+| **$110.0 (OTM)** | $1.40 | $\$1.53 \pm 0.01$ | **$1.52** | **$0.02** |
+| **$120.0 (Deep OTM)** | $0.44 | $\$0.47 \pm 0.01$ | **$0.47** | **$0.00** |
 
 * **Mean Absolute Difference vs LSM:** **$\$0.07$**.
 * **Speedup:** **$1010.0\times$ faster** ($7.55\text{ ms}$ vs. $7623.61\text{ ms}$).
@@ -184,11 +184,11 @@ Therefore, $\mathbf{e_\theta(\mathbf{S}, T) \equiv 0}$ strictly by mathematical 
 ### D. Phase 3: 10-Asset High-Dimensional Correlated Basket Option ($d=10, \rho=0.35$, 100k-Path 68-Basis LSM)
 | Spot Price $S_{0,i}$ | European Exact | LSM Monte Carlo ($100\text{k}$) | Novel High-Dim EEP-PINN | Difference vs LSM |
 | :---: | :---: | :---: | :---: | :---: |
-| **$80.0 (Deep ITM)** | $\$16.61$ | $\$19.96 \pm 0.00$ | **$\$19.85$** | $\$0.11$ |
-| **$90.0 (ITM)** | $\$8.71$ | $\$10.18 \pm 0.01$ | **$\$10.31$** | $\$0.13$ |
-| **$100.0 (ATM)** | $\$3.61$ | $\$3.99 \pm 0.02$ | **$\$4.15$** | $\$0.16$ |
-| **$110.0 (OTM)** | $\$1.18$ | $\$1.29 \pm 0.01$ | **$\$1.43$** | $\$0.15$ |
-| **$120.0 (Deep OTM)** | $\$0.31$ | $\$0.33 \pm 0.00$ | **$\$0.48$** | $\$0.15$ |
+| **$80.0 (Deep ITM)** | $16.61 | $\$19.96 \pm 0.00$ | **$19.85** | $0.11 |
+| **$90.0 (ITM)** | $8.71 | $\$10.18 \pm 0.01$ | **$10.31** | $0.13 |
+| **$100.0 (ATM)** | $3.61 | $\$3.99 \pm 0.02$ | **$4.15** | $0.16 |
+| **$110.0 (OTM)** | $1.18 | $\$1.29 \pm 0.01$ | **$1.43** | $0.15 |
+| **$120.0 (Deep OTM)** | $0.31 | $\$0.33 \pm 0.00$ | **$0.48** | $0.15 |
 
 * **Speedup:** **$6882.6\times$ faster** ($3.47\text{ ms}$ vs. $23900.48\text{ ms}$).
 * **Mean Absolute Difference vs LSM:** **$\$0.14$** in 10-dimensional space.
@@ -199,11 +199,11 @@ Therefore, $\mathbf{e_\theta(\mathbf{S}, T) \equiv 0}$ strictly by mathematical 
 ### E. Scalability Suite: 30-Asset Dow Jones Industrial Scale Basket Option ($d=30, \rho=0.30$, 435 Correlation Pairs, 100k-Path 498-Basis LSM)
 | Spot Price $S_{0,i}$ | European Exact | LSM Monte Carlo ($100\text{k}$) | Novel 30D EEP-PINN | Difference vs LSM |
 | :---: | :---: | :---: | :---: | :---: |
-| **$80.0 (Deep ITM)** | $\$16.76$ | $\$19.99 \pm 0.00$ | **$\$19.96$** | **$\$0.03$** |
-| **$90.0 (ITM)** | $\$8.63$ | $\$10.19 \pm 0.01$ | **$\$10.09$** | $\$0.10$ |
-| **$100.0 (ATM)** | $\$3.39$ | $\$3.84 \pm 0.01$ | **$\$3.76$** | **$\$0.08$** |
-| **$110.0 (OTM)** | $\$1.00$ | $\$1.15 \pm 0.01$ | **$\$1.09$** | **$\$0.06$** |
-| **$120.0 (Deep OTM)** | $\$0.23$ | $\$0.29 \pm 0.00$ | **$\$0.25$** | **$\$0.04$** |
+| **$80.0 (Deep ITM)** | $16.76 | $\$19.99 \pm 0.00$ | **$19.96** | **$0.03** |
+| **$90.0 (ITM)** | $8.63 | $\$10.19 \pm 0.01$ | **$10.09** | $0.10 |
+| **$100.0 (ATM)** | $3.39 | $\$3.84 \pm 0.01$ | **$3.76** | **$0.08** |
+| **$110.0 (OTM)** | $1.00 | $\$1.15 \pm 0.01$ | **$1.09** | **$0.06** |
+| **$120.0 (Deep OTM)** | $0.23 | $\$0.29 \pm 0.00$ | **$0.25** | **$0.04** |
 
 * **Speedup:** **$62,842.1\times$ faster** ($3.26\text{ ms}$ vs. $204,703.02\text{ ms} \approx 3.4\text{ mins}$ per spot level).
 * **Mean Absolute Difference vs LSM:** **$\$0.06$** across all 30 assets.
@@ -213,11 +213,11 @@ Therefore, $\mathbf{e_\theta(\mathbf{S}, T) \equiv 0}$ strictly by mathematical 
 ### F. Scalability Suite: 50-Asset Nifty 50 / Euro Stoxx 50 Scale Basket Option ($d=50, \rho=0.25$, 1225 Correlation Pairs, 100k-Path 1328-Basis LSM)
 | Spot Price $S_{0,i}$ | European Exact | LSM Monte Carlo ($100\text{k}$) | Novel 50D EEP-PINN | Difference vs LSM |
 | :---: | :---: | :---: | :---: | :---: |
-| **$80.0 (Deep ITM)** | $\$16.60$ | $\$20.02 \pm 0.00$ | **$\$19.80$** | $\$0.22$ |
-| **$90.0 (ITM)** | $\$8.11$ | $\$10.15 \pm 0.01$ | **$\$10.17$** | **$\$0.02$** |
-| **$100.0 (ATM)** | $\$2.74$ | $\$3.28 \pm 0.01$ | **$\$3.30$** | **$\$0.02$** |
-| **$110.0 (OTM)** | $\$0.62$ | $\$0.78 \pm 0.01$ | **$\$0.70$** | **$\$0.08$** |
-| **$120.0 (Deep OTM)** | $\$0.10$ | $\$0.16 \pm 0.00$ | **$\$0.11$** | **$\$0.06$** |
+| **$80.0 (Deep ITM)** | $16.60 | $\$20.02 \pm 0.00$ | **$19.80** | $0.22 |
+| **$90.0 (ITM)** | $8.11 | $\$10.15 \pm 0.01$ | **$10.17** | **$0.02** |
+| **$100.0 (ATM)** | $2.74 | $\$3.28 \pm 0.01$ | **$3.30** | **$0.02** |
+| **$110.0 (OTM)** | $0.62 | $\$0.78 \pm 0.01$ | **$0.70** | **$0.08** |
+| **$120.0 (Deep OTM)** | $0.10 | $\$0.16 \pm 0.00$ | **$0.11** | **$0.06** |
 
 * **Speedup:** **$176,760.1\times$ faster** ($3.94\text{ ms}$ vs. $696,333.20\text{ ms} \approx 11.6\text{ mins}$ per spot level).
 * **Mean Absolute Difference vs LSM:** **$\$0.08$** across all 50 dimensions.

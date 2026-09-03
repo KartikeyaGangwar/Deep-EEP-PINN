@@ -26,6 +26,7 @@ import argparse
 import time
 import platform
 import torch
+import numpy as np
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
