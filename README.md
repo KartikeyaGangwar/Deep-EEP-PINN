@@ -46,8 +46,8 @@ All benchmarks evaluated on NVIDIA Tesla P100 (16GB VRAM) and validated against 
 | Model Architecture | Rel. $L_2$ Error (%) | Max Error ($L_\infty$) | MAE | Boundary RMSE | Forward Latency | Speedup vs PSOR |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Crank-Nicolson PSOR (Ground Truth)** | Benchmark | Benchmark | Benchmark | Benchmark | $1149.78\text{ ms}$ | $1.0\times$ |
-| **Baseline Penalty PINN** | $3.86\%$ | ₹$7.63$ | ₹$0.97$ | ₹$5.17$ | $8.00\text{ ms}$ | $143.7\times$ |
-| **Novel EEP-PINN (Proposed)** | **$0.37\%$** | **₹$0.43$** | **₹$0.08$** | **₹$2.93$** | **$11.84\text{ ms}$** | **$97.1\times$** |
+| **Baseline Penalty PINN** | $3.86\%$ | $\$7.63$ | $\$0.97$ | $\$5.17$ | $8.00\text{ ms}$ | $143.7\times$ |
+| **Novel EEP-PINN (Proposed)** | **$0.37\%$** | **$\$0.43$** | **$\$0.08$** | **$\$2.93$** | **$11.84\text{ ms}$** | **$97.1\times$** |
 
 ---
 
@@ -56,14 +56,14 @@ All benchmarks evaluated on NVIDIA Tesla P100 (16GB VRAM) and validated against 
 
 | Initial Spot $S_{0,i}$ | European Exact | LSM Monte Carlo ($100\text{k}$) | Novel EEP-PINN | Difference vs LSM |
 | :---: | :---: | :---: | :---: | :---: |
-| **₹80.0 (Deep ITM)** | ₹16.70 | ₹$19.96 \pm 0.00$ | **₹19.80** | ₹0.16 |
-| **₹90.0 (ITM)** | ₹9.13 | ₹$10.47 \pm 0.02$ | **₹10.36** | ₹0.11 |
-| **₹100.0 (ATM)** | ₹4.16 | ₹$4.55 \pm 0.02$ | **₹4.49** | **₹0.06** |
-| **₹110.0 (OTM)** | ₹1.58 | ₹$1.69 \pm 0.01$ | **₹1.66** | **₹0.04** |
-| **₹120.0 (Deep OTM)** | ₹0.52 | ₹$0.55 \pm 0.01$ | **₹0.53** | **₹0.02** |
+| **$80.0 (Deep ITM)** | $\$16.70$ | $\$19.96 \pm 0.00$ | **$\$19.80$** | $\$0.16$ |
+| **$90.0 (ITM)** | $\$9.13$ | $\$10.47 \pm 0.02$ | **$\$10.36$** | $\$0.11$ |
+| **$100.0 (ATM)** | $\$4.16$ | $\$4.55 \pm 0.02$ | **$\$4.49$** | **$\$0.06$** |
+| **$110.0 (OTM)** | $\$1.58$ | $\$1.69 \pm 0.01$ | **$\$1.66$** | **$\$0.04$** |
+| **$120.0 (Deep OTM)** | $\$0.52$ | $\$0.55 \pm 0.01$ | **$\$0.53$** | **$\$0.02$** |
 
 * **Forward Latency:** $3.50\text{ ms}$ ($2712.2\times$ faster than 100k-path LSM).
-* **Mean Absolute Difference:** ₹0.08 across all moneyness levels.
+* **Mean Absolute Difference:** $\$0.08$ across all moneyness levels.
 
 ---
 
@@ -72,14 +72,14 @@ All benchmarks evaluated on NVIDIA Tesla P100 (16GB VRAM) and validated against 
 
 | Initial Spot $S_{0,i}$ | European Arith MM | Arithmetic LSM ($100\text{k}$) | Novel Arith EEP-PINN | Difference vs LSM |
 | :---: | :---: | :---: | :---: | :---: |
-| **₹80.0 (Deep ITM)** | ₹15.96 | ₹$19.95 \pm 0.00$ | **₹19.79** | ₹0.16 |
-| **₹90.0 (ITM)** | ₹8.53 | ₹$10.28 \pm 0.02$ | **₹10.14** | ₹0.14 |
-| **₹100.0 (ATM)** | ₹3.78 | ₹$4.26 \pm 0.02$ | **₹4.24** | **₹0.02** |
-| **₹110.0 (OTM)** | ₹1.40 | ₹$1.53 \pm 0.01$ | **₹1.52** | **₹0.02** |
-| **₹120.0 (Deep OTM)** | ₹0.44 | ₹$0.47 \pm 0.01$ | **₹0.47** | **₹0.00** |
+| **$80.0 (Deep ITM)** | $\$15.96$ | $\$19.95 \pm 0.00$ | **$\$19.79$** | $\$0.16$ |
+| **$90.0 (ITM)** | $\$8.53$ | $\$10.28 \pm 0.02$ | **$\$10.14$** | $\$0.14$ |
+| **$100.0 (ATM)** | $\$3.78$ | $\$4.26 \pm 0.02$ | **$\$4.24$** | **$\$0.02$** |
+| **$110.0 (OTM)** | $\$1.40$ | $\$1.53 \pm 0.01$ | **$\$1.52$** | **$\$0.02$** |
+| **$120.0 (Deep OTM)** | $\$0.44$ | $\$0.47 \pm 0.01$ | **$\$0.47$** | **$\$0.00$** |
 
 * **Forward Latency:** $7.55\text{ ms}$ ($1010.0\times$ faster than 100k-path LSM).
-* **Mean Absolute Difference:** ₹0.07.
+* **Mean Absolute Difference:** $\$0.07$.
 
 ---
 
@@ -88,28 +88,28 @@ All benchmarks evaluated on NVIDIA Tesla P100 (16GB VRAM) and validated against 
 
 | Initial Spot $S_{0,i}$ | European Exact | LSM Monte Carlo ($100\text{k}$) | Novel 10D EEP-PINN | Difference vs LSM |
 | :---: | :---: | :---: | :---: | :---: |
-| **₹80.0 (Deep ITM)** | ₹16.61 | ₹$19.96 \pm 0.00$ | **₹19.85** | ₹0.11 |
-| **₹90.0 (ITM)** | ₹8.71 | ₹$10.18 \pm 0.01$ | **₹10.31** | ₹0.13 |
-| **₹100.0 (ATM)** | ₹3.61 | ₹$3.99 \pm 0.02$ | **₹4.15** | ₹0.16 |
-| **₹110.0 (OTM)** | ₹1.18 | ₹$1.29 \pm 0.01$ | **₹1.43** | ₹0.15 |
-| **₹120.0 (Deep OTM)** | ₹0.31 | ₹$0.33 \pm 0.00$ | **₹0.48** | ₹0.15 |
+| **$80.0 (Deep ITM)** | $\$16.61$ | $\$19.96 \pm 0.00$ | **$\$19.85$** | $\$0.11$ |
+| **$90.0 (ITM)** | $\$8.71$ | $\$10.18 \pm 0.01$ | **$\$10.31$** | $\$0.13$ |
+| **$100.0 (ATM)** | $\$3.61$ | $\$3.99 \pm 0.02$ | **$\$4.15$** | $\$0.16$ |
+| **$110.0 (OTM)** | $\$1.18$ | $\$1.29 \pm 0.01$ | **$\$1.43$** | $\$0.15$ |
+| **$120.0 (Deep OTM)** | $\$0.31$ | $\$0.33 \pm 0.00$ | **$\$0.48$** | $\$0.15$ |
 
 * **Forward Latency:** $3.47\text{ ms}$ ($6882.6\times$ faster than 100k-path LSM).
-* **Mean Absolute Difference:** ₹0.14.
+* **Mean Absolute Difference:** $\$0.14$.
 
 ---
 
 ### 5. Scalability Suite: 30-Asset Dow Jones Industrial Scale ($d=30, \rho=0.30$, 435 Correlation Pairs)
 * **Parameters:** $d=30$, 435 correlation pairs, 100k-path 498-basis polynomial LSM.
-* **Mean Difference vs LSM:** **₹0.06 (6 paise)** across all 30 assets.
+* **Mean Difference vs LSM:** **$\$0.06$** across all 30 assets.
 * **Forward Latency:** **$3.26\text{ ms}$** vs **$204.7\text{ seconds}$** in LSM Monte Carlo (**$62,842\times$ Speedup**).
 
 ---
 
 ### 6. Scalability Suite: 50-Asset Nifty 50 Scale ($d=50, \rho=0.25$, 1,225 Correlation Pairs)
 * **Parameters:** $d=50$, 1,225 correlation pairs, 100k-path 1328-basis polynomial LSM.
-* **Mean Difference vs LSM:** **₹0.08 (8 paise)** across all 50 dimensions.
-* **ATM Difference:** **₹0.02 (2 paise)**.
+* **Mean Difference vs LSM:** **$\$0.08$** across all 50 dimensions.
+* **ATM Difference:** **$\$0.02$**.
 * **Forward Latency:** **$3.94\text{ ms}$** vs **$696.3\text{ seconds}$ ($11.6\text{ minutes}$)** in LSM Monte Carlo (**$176,760\times$ Speedup**).
 
 ---

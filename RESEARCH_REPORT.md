@@ -2,7 +2,9 @@
 
 ## An Analytical Early-Exercise Premium Physics-Informed Neural Network (EEP-PINN) for 1D, 5D Geometric, and 5D Real-World Arithmetic American Basket Options
 
-**Author:** Final Year B.Sc. (Hons) Mathematics, University of Delhi  
+**Author:** Kartikey Singh  
+**Affiliation:** Department of Mathematics, University of Delhi, Delhi, India  
+**Email:** kartikeysingh525@protonmail.com  
 **Specialization:** Differential Equations, Numerical Analysis, Computational Finance & Scientific Machine Learning  
 
 ---
@@ -45,9 +47,9 @@
 American option pricing represents a classic **parabolic free-boundary obstacle problem** in applied mathematics. Unlike European options which possess exact closed-form formulas (Black-Scholes 1973), American options allow early exercise at any time $t \in [0, T]$, requiring the simultaneous computation of the option price manifold $V(\mathbf{S}, t)$ and the optimal moving exercise boundary $\mathbf{S}^*(t)$.
 
 ### Key Empirical Achievements:
-* **1D Single Stock Free-Boundary:** Relative $L_2$ Error reduced to **$0.37\%$**, Max Error = **₹0.43**, MAE = **₹0.08 (8 paise)** ($97.1\times$ faster than Crank-Nicolson PSOR).
+* **1D Single Stock Free-Boundary:** Relative $L_2$ Error reduced to **$0.37\%$**, Max Error = **$\$0.43$**, MAE = **$\$0.08$** ($97.1\times$ faster than Crank-Nicolson PSOR).
 * **5D Correlated Geometric Basket ($d=5$):** Overcomes the Curse of Dimensionality ($300^5 = 2.43\text{ Trillion}$ grid nodes) with **$2712.2\times$ speedup** over 100,000-path Longstaff-Schwartz Monte Carlo.
-* **5D Real-World Arithmetic Basket ($d=5$):** Solved exchange-traded arithmetic average payoff $\max(K - \sum w_i S_i, 0)$ with a Mean Absolute Difference of **₹0.07 (7 paise)** and **$1010.0\times$ speedup** over 100,000-path Arithmetic Monte Carlo.
+* **5D Real-World Arithmetic Basket ($d=5$):** Solved exchange-traded arithmetic average payoff $\max(K - \sum w_i S_i, 0)$ with a Mean Absolute Difference of **$\$0.07$** and **$1010.0\times$ speedup** over 100,000-path Arithmetic Monte Carlo.
 * **10D High-Dimensional Basket ($d=10$):** Solved 45 pairwise correlation PDE space in $3.47\text{ ms}$ (**$6882.6\times$ speedup** over 100,000-path LSM).
 * **30D Dow Jones Scale Basket ($d=30$):** Solved 435 correlation pairs in $3.26\text{ ms}$ (**$62,842.1\times$ speedup** over 100,000-path LSM).
 * **50D Nifty 50 Scale Basket ($d=50$):** Solved 1,225 correlation pairs in $3.94\text{ ms}$ (**$176,760.1\times$ speedup** over 100,000-path LSM) with zero OOM.
@@ -143,8 +145,8 @@ Therefore, $\mathbf{e_\theta(\mathbf{S}, T) \equiv 0}$ strictly by mathematical 
 | Model Architecture | Rel. $L_2$ Error | Max Error ($L_\infty$) | MAE | Boundary RMSE | Eval Latency | Speedup vs PSOR |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Crank-Nicolson PSOR (Ground Truth)** | Benchmark | Benchmark | Benchmark | Benchmark | $1149.78\text{ ms}$ | $1.0\times$ |
-| **Baseline Single-Network PINN** | $3.86\%$ | ₹$7.63$ | ₹$0.97$ | ₹$5.17$ | $8.00\text{ ms}$ | $143.7\times$ |
-| **Novel EEP-PINN (1D Proposed)** | **$0.37\%$** | **₹$0.43$ (43 paise)** | **₹$0.08$ (8 paise)** | **₹$2.93$** | **$11.84\text{ ms}$** | **$97.1\times$** |
+| **Baseline Single-Network PINN** | $3.86\%$ | $\$7.63$ | $\$0.97$ | $\$5.17$ | $8.00\text{ ms}$ | $143.7\times$ |
+| **Novel EEP-PINN (1D Proposed)** | **$0.37\%$** | **$\$0.43$** | **$\$0.08$** | **$\$2.93$** | **$11.84\text{ ms}$** | **$97.1\times$** |
 
 * **Accuracy Gain:** $10.4\times$ reduction in Relative $L_2$ error ($0.37\%$ vs $3.86\%$) and $17.7\times$ reduction in Max Error ($0.43$ vs $7.63$).
 * **Learned Dynamic Uncertainty Weights:** $w_{\text{pde}}=2.51, w_{\text{obstacle}}=2.73, w_{\text{bc0}}=2.53$.
@@ -154,27 +156,27 @@ Therefore, $\mathbf{e_\theta(\mathbf{S}, T) \equiv 0}$ strictly by mathematical 
 ### B. Phase 2A: 5-Asset Geometric Basket Option ($d=5, \rho=0.40$, 100k-Path 23-Basis LSM)
 | Spot Price $S_{0,i}$ | European Exact | LSM Monte Carlo ($100\text{k}$) | Novel Geometric EEP-PINN | Difference vs LSM |
 | :---: | :---: | :---: | :---: | :---: |
-| **₹80.0 (Deep ITM)** | ₹16.70 | ₹$19.96 \pm 0.00$ | **₹19.80** | ₹0.16 |
-| **₹90.0 (ITM)** | ₹9.13 | ₹$10.47 \pm 0.02$ | **₹10.36** | ₹0.11 |
-| **₹100.0 (ATM)** | ₹4.16 | ₹$4.55 \pm 0.02$ | **₹4.49** | **₹0.06 (6 paise)** |
-| **₹110.0 (OTM)** | ₹1.58 | ₹$1.69 \pm 0.01$ | **₹1.66** | **₹0.04 (4 paise)** |
-| **₹120.0 (Deep OTM)** | ₹0.52 | ₹$0.55 \pm 0.01$ | **₹0.53** | **₹0.02 (2 paise)** |
+| **$80.0 (Deep ITM)** | $\$16.70$ | $\$19.96 \pm 0.00$ | **$\$19.80$** | $\$0.16$ |
+| **$90.0 (ITM)** | $\$9.13$ | $\$10.47 \pm 0.02$ | **$\$10.36$** | $\$0.11$ |
+| **$100.0 (ATM)** | $\$4.16$ | $\$4.55 \pm 0.02$ | **$\$4.49$** | **$\$0.06$** |
+| **$110.0 (OTM)** | $\$1.58$ | $\$1.69 \pm 0.01$ | **$\$1.66$** | **$\$0.04$** |
+| **$120.0 (Deep OTM)** | $\$0.52$ | $\$0.55 \pm 0.01$ | **$\$0.53$** | **$\$0.02$** |
 
 * **Speedup:** **$2712.2\times$ faster** ($3.50\text{ ms}$ vs. $9484.37\text{ ms}$).
-* **Mean Absolute Difference vs LSM:** **₹0.08 (8 paise)** across all moneyness regimes.
+* **Mean Absolute Difference vs LSM:** **$\$0.08$** across all moneyness regimes.
 
 ---
 
 ### C. Phase 2B: Real-World 5-Asset Arithmetic Basket Option ($d=5, \rho=0.40$, 100k-Path 23-Basis LSM)
 | Spot Price $S_{0,i}$ | European Arith MM | Arithmetic LSM ($100\text{k}$) | Novel Arithmetic EEP-PINN | Difference vs LSM |
 | :---: | :---: | :---: | :---: | :---: |
-| **₹80.0 (Deep ITM)** | ₹15.96 | ₹$19.95 \pm 0.00$ | **₹19.79** | ₹0.16 |
-| **₹90.0 (ITM)** | ₹8.53 | ₹$10.28 \pm 0.02$ | **₹10.14** | ₹0.14 |
-| **₹100.0 (ATM)** | ₹3.78 | ₹$4.26 \pm 0.02$ | **₹4.24** | **₹0.02 (2 paise)** |
-| **₹110.0 (OTM)** | ₹1.40 | ₹$1.53 \pm 0.01$ | **₹1.52** | **₹0.02 (2 paise)** |
-| **₹120.0 (Deep OTM)** | ₹0.44 | ₹$0.47 \pm 0.01$ | **₹0.47** | **₹0.00 (0 paise!)** |
+| **$80.0 (Deep ITM)** | $\$15.96$ | $\$19.95 \pm 0.00$ | **$\$19.79$** | $\$0.16$ |
+| **$90.0 (ITM)** | $\$8.53$ | $\$10.28 \pm 0.02$ | **$\$10.14$** | $\$0.14$ |
+| **$100.0 (ATM)** | $\$3.78$ | $\$4.26 \pm 0.02$ | **$\$4.24$** | **$\$0.02$** |
+| **$110.0 (OTM)** | $\$1.40$ | $\$1.53 \pm 0.01$ | **$\$1.52$** | **$\$0.02$** |
+| **$120.0 (Deep OTM)** | $\$0.44$ | $\$0.47 \pm 0.01$ | **$\$0.47$** | **$\$0.00$** |
 
-* **Mean Absolute Difference vs LSM:** **₹0.07 (7 paise!)**.
+* **Mean Absolute Difference vs LSM:** **$\$0.07$**.
 * **Speedup:** **$1010.0\times$ faster** ($7.55\text{ ms}$ vs. $7623.61\text{ ms}$).
 
 ---
@@ -182,14 +184,14 @@ Therefore, $\mathbf{e_\theta(\mathbf{S}, T) \equiv 0}$ strictly by mathematical 
 ### D. Phase 3: 10-Asset High-Dimensional Correlated Basket Option ($d=10, \rho=0.35$, 100k-Path 68-Basis LSM)
 | Spot Price $S_{0,i}$ | European Exact | LSM Monte Carlo ($100\text{k}$) | Novel High-Dim EEP-PINN | Difference vs LSM |
 | :---: | :---: | :---: | :---: | :---: |
-| **₹80.0 (Deep ITM)** | ₹16.61 | ₹$19.96 \pm 0.00$ | **₹19.85** | ₹0.11 |
-| **₹90.0 (ITM)** | ₹8.71 | ₹$10.18 \pm 0.01$ | **₹10.31** | ₹0.13 |
-| **₹100.0 (ATM)** | ₹3.61 | ₹$3.99 \pm 0.02$ | **₹4.15** | ₹0.16 |
-| **₹110.0 (OTM)** | ₹1.18 | ₹$1.29 \pm 0.01$ | **₹1.43** | ₹0.15 |
-| **₹120.0 (Deep OTM)** | ₹0.31 | ₹$0.33 \pm 0.00$ | **₹0.48** | ₹0.15 |
+| **$80.0 (Deep ITM)** | $\$16.61$ | $\$19.96 \pm 0.00$ | **$\$19.85$** | $\$0.11$ |
+| **$90.0 (ITM)** | $\$8.71$ | $\$10.18 \pm 0.01$ | **$\$10.31$** | $\$0.13$ |
+| **$100.0 (ATM)** | $\$3.61$ | $\$3.99 \pm 0.02$ | **$\$4.15$** | $\$0.16$ |
+| **$110.0 (OTM)** | $\$1.18$ | $\$1.29 \pm 0.01$ | **$\$1.43$** | $\$0.15$ |
+| **$120.0 (Deep OTM)** | $\$0.31$ | $\$0.33 \pm 0.00$ | **$\$0.48$** | $\$0.15$ |
 
 * **Speedup:** **$6882.6\times$ faster** ($3.47\text{ ms}$ vs. $23900.48\text{ ms}$).
-* **Mean Absolute Difference vs LSM:** **₹0.14 (14 paise)** in 10-dimensional space!
+* **Mean Absolute Difference vs LSM:** **$\$0.14$** in 10-dimensional space.
 * **Curse of Dimensionality Solution:** Evaluates the 10D PDE (45 correlation pairs) in $3.47\text{ ms}$ where classical finite difference would require $5.9 \times 10^{24}$ grid nodes.
 
 ---
@@ -197,28 +199,28 @@ Therefore, $\mathbf{e_\theta(\mathbf{S}, T) \equiv 0}$ strictly by mathematical 
 ### E. Scalability Suite: 30-Asset Dow Jones Industrial Scale Basket Option ($d=30, \rho=0.30$, 435 Correlation Pairs, 100k-Path 498-Basis LSM)
 | Spot Price $S_{0,i}$ | European Exact | LSM Monte Carlo ($100\text{k}$) | Novel 30D EEP-PINN | Difference vs LSM |
 | :---: | :---: | :---: | :---: | :---: |
-| **₹80.0 (Deep ITM)** | ₹16.76 | ₹$19.99 \pm 0.00$ | **₹19.96** | **₹0.03 (3 paise!)** |
-| **₹90.0 (ITM)** | ₹8.63 | ₹$10.19 \pm 0.01$ | **₹10.09** | ₹0.10 |
-| **₹100.0 (ATM)** | ₹3.39 | ₹$3.84 \pm 0.01$ | **₹3.76** | **₹0.08 (8 paise)** |
-| **₹110.0 (OTM)** | ₹1.00 | ₹$1.15 \pm 0.01$ | **₹1.09** | **₹0.06 (6 paise)** |
-| **₹120.0 (Deep OTM)** | ₹0.23 | ₹$0.29 \pm 0.00$ | **₹0.25** | **₹0.04 (4 paise)** |
+| **$80.0 (Deep ITM)** | $\$16.76$ | $\$19.99 \pm 0.00$ | **$\$19.96$** | **$\$0.03$** |
+| **$90.0 (ITM)** | $\$8.63$ | $\$10.19 \pm 0.01$ | **$\$10.09$** | $\$0.10$ |
+| **$100.0 (ATM)** | $\$3.39$ | $\$3.84 \pm 0.01$ | **$\$3.76$** | **$\$0.08$** |
+| **$110.0 (OTM)** | $\$1.00$ | $\$1.15 \pm 0.01$ | **$\$1.09$** | **$\$0.06$** |
+| **$120.0 (Deep OTM)** | $\$0.23$ | $\$0.29 \pm 0.00$ | **$\$0.25$** | **$\$0.04$** |
 
 * **Speedup:** **$62,842.1\times$ faster** ($3.26\text{ ms}$ vs. $204,703.02\text{ ms} \approx 3.4\text{ mins}$ per spot level).
-* **Mean Absolute Difference vs LSM:** **₹0.06 (6 paise)** across all 30 assets!
+* **Mean Absolute Difference vs LSM:** **$\$0.06$** across all 30 assets.
 
 ---
 
 ### F. Scalability Suite: 50-Asset Nifty 50 / Euro Stoxx 50 Scale Basket Option ($d=50, \rho=0.25$, 1225 Correlation Pairs, 100k-Path 1328-Basis LSM)
 | Spot Price $S_{0,i}$ | European Exact | LSM Monte Carlo ($100\text{k}$) | Novel 50D EEP-PINN | Difference vs LSM |
 | :---: | :---: | :---: | :---: | :---: |
-| **₹80.0 (Deep ITM)** | ₹16.60 | ₹$20.02 \pm 0.00$ | **₹19.80** | ₹0.22 |
-| **₹90.0 (ITM)** | ₹8.11 | ₹$10.15 \pm 0.01$ | **₹10.17** | **₹0.02 (2 paise!)** |
-| **₹100.0 (ATM)** | ₹2.74 | ₹$3.28 \pm 0.01$ | **₹3.30** | **₹0.02 (2 paise!)** |
-| **₹110.0 (OTM)** | ₹0.62 | ₹$0.78 \pm 0.01$ | **₹0.70** | **₹0.08 (8 paise)** |
-| **₹120.0 (Deep OTM)** | ₹0.10 | ₹$0.16 \pm 0.00$ | **₹0.11** | **₹0.06 (6 paise)** |
+| **$80.0 (Deep ITM)** | $\$16.60$ | $\$20.02 \pm 0.00$ | **$\$19.80$** | $\$0.22$ |
+| **$90.0 (ITM)** | $\$8.11$ | $\$10.15 \pm 0.01$ | **$\$10.17$** | **$\$0.02$** |
+| **$100.0 (ATM)** | $\$2.74$ | $\$3.28 \pm 0.01$ | **$\$3.30$** | **$\$0.02$** |
+| **$110.0 (OTM)** | $\$0.62$ | $\$0.78 \pm 0.01$ | **$\$0.70$** | **$\$0.08$** |
+| **$120.0 (Deep OTM)** | $\$0.10$ | $\$0.16 \pm 0.00$ | **$\$0.11$** | **$\$0.06$** |
 
 * **Speedup:** **$176,760.1\times$ faster** ($3.94\text{ ms}$ vs. $696,333.20\text{ ms} \approx 11.6\text{ mins}$ per spot level).
-* **Mean Absolute Difference vs LSM:** **₹0.08 (8 paise)** across all 50 dimensions!
+* **Mean Absolute Difference vs LSM:** **$\$0.08$** across all 50 dimensions.
 * **Memory & Stability:** Chunked loss evaluation ensures peak VRAM remains $< 3\text{ GB}$ on Tesla P100 with zero OOM.
 
 ---
