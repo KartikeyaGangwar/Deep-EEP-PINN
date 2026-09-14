@@ -175,8 +175,9 @@ python src/evaluation/regenerate_all_figures.py
 ## Author & Citation
 
 * **Author:** Kartikey Singh
-* **Affiliation:** Department of Mathematics, University of Delhi, Delhi, India
+* **Affiliation:** Department of Mathematics, University of Delhi, Delhi, 110007, India
 * **Email:** [kartikeysingh525@protonmail.com](mailto:kartikeysingh525@protonmail.com)
+* **ORCID:** [https://orcid.org/0009-0009-1973-7532](https://orcid.org/0009-0009-1973-7532)
 * **Repository:** [https://github.com/KartikeyaGangwar/Deep-EEP-PINN](https://github.com/KartikeyaGangwar/Deep-EEP-PINN)
 
 ```bibtex
