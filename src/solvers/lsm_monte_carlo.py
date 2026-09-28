@@ -120,9 +120,19 @@ class LongstaffSchwartzBasketSolver:
             else:
                 cash_flows = cash_flows * self.df
                 
+        # Discount from t_1 to t_0
         discounted_val = cash_flows * self.df
-        price_estimate = np.mean(discounted_val)
-        std_err = np.std(discounted_val) / np.sqrt(self.num_paths)
+        continuation_0 = np.mean(discounted_val)
+        
+        # Immediate exercise check at t_0 (admissible American/Bermudan option condition)
+        intrinsic_0 = float(self.compute_basket_payoff(paths[:1, 0, :])[0])
+        price_estimate = max(intrinsic_0, float(continuation_0))
+        
+        if intrinsic_0 >= continuation_0:
+            std_err = 0.0
+        else:
+            std_err = float(np.std(discounted_val) / np.sqrt(self.num_paths))
+            
         exec_time = time.perf_counter() - start_time
         
         return price_estimate, std_err, exec_time

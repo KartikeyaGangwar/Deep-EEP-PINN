@@ -29,13 +29,13 @@ def plot_10d_pricing_comparison(spot_levels, euro_prices, lsm_prices, lsm_errors
     spots = np.array(spot_levels)
     plt.plot(spots, euro_prices, "g--", linewidth=2.0, label=r"$\mathrm{European\; Basket\; (Exact\;} V_{\mathrm{Euro}}\mathrm{)}$")
     plt.errorbar(spots, lsm_prices, yerr=1.96*np.array(lsm_errors), fmt="ko", capsize=5, capthick=1.5,
-                 markersize=6, label=r"$\mathrm{LSM\; Monte\; Carlo\; (100k\; paths} \pm 1.96\mathrm{SE)}$")
-    plt.plot(spots, eep_prices, "b-^", linewidth=2.5, markersize=7, label=r"$\mathrm{Novel\; 10D\; EEP-PINN\;} (V_{\mathrm{Euro}} + e_\theta)$")
+                 markersize=6, label=r"$\mathrm{LSM\; Reference\; (100k\; paths} \pm 1.96\mathrm{SE)}$")
+    plt.plot(spots, eep_prices, "b-^", linewidth=2.5, markersize=7, label=r"$\mathrm{Deep\text{-}EEP\text{-}PINN\;} (V_{\mathrm{Euro}} + e_\theta)$")
     
     # Shade early exercise premium
     plt.fill_between(spots, euro_prices, eep_prices, color="purple", alpha=0.12, label=r"$\mathrm{Early\; Exercise\; Premium\;} e(\mathbf{S}, t)$")
     
-    plt.axvline(x=100.0, color="gray", linestyle=":", alpha=0.7, label=r"$\mathrm{Strike\;} K = 100\$")
+    plt.axvline(x=100.0, color="gray", linestyle=":", alpha=0.7, label=r"$\mathrm{Strike\;} K = 100$")
     plt.title(r"$\mathbf{Phase\; 3:\; 10-Asset\; Correlated\; American\; Basket\; Option\;} (d = 10, \rho = 0.35)$", pad=12, fontsize=12)
     plt.xlabel(r"$\mathrm{Basket\; Initial\; Spot\; Price\;} S_{0, i} \;(\$)$")
     plt.ylabel(r"$\mathrm{Option\; Fair\; Value\;} V(\mathbf{S}_0, 0) \;(\$)$")

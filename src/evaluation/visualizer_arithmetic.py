@@ -29,12 +29,12 @@ def plot_arithmetic_pricing_comparison(spot_levels, euro_prices, lsm_prices, lsm
     spots = np.array(spot_levels)
     plt.plot(spots, euro_prices, "g--", linewidth=2.0, label=r"$\mathrm{European\; Arithmetic\; (Moment-Matched\;} V_{\mathrm{Euro}}^{\mathrm{arith}}\mathrm{)}$")
     plt.errorbar(spots, lsm_prices, yerr=1.96*np.array(lsm_errors), fmt="ko", capsize=5, capthick=1.5,
-                 markersize=6, label=r"$\mathrm{Arithmetic\; LSM\; Monte\; Carlo\; (100k\; paths} \pm 1.96\mathrm{SE)}$")
-    plt.plot(spots, eep_prices, "r-^", linewidth=2.5, markersize=7, label=r"$\mathrm{Novel\; Arithmetic\; EEP-PINN\;} (V_{\mathrm{Euro}}^{\mathrm{arith}} + e_\theta)$")
+                 markersize=6, label=r"$\mathrm{Arithmetic\; LSM\; Reference\; (100k\; paths} \pm 1.96\mathrm{SE)}$")
+    plt.plot(spots, eep_prices, "r-^", linewidth=2.5, markersize=7, label=r"$\mathrm{Deep\text{-}EEP\text{-}PINN\; (Arithmetic)\;} (V_{\mathrm{anchor}} + e_\theta)$")
     
     plt.fill_between(spots, euro_prices, eep_prices, color="red", alpha=0.10, label=r"$\mathrm{Arithmetic\; Early\; Exercise\; Premium\;} e(\mathbf{S}, t)$")
     
-    plt.axvline(x=100.0, color="gray", linestyle=":", alpha=0.7, label=r"$\mathrm{Strike\;} K = 100\$")
+    plt.axvline(x=100.0, color="gray", linestyle=":", alpha=0.7, label=r"$\mathrm{Strike\;} K = 100$")
     plt.title(r"$\mathbf{Phase\; 2B:\; 5-Asset\; Real-World\; Arithmetic\; American\; Basket\; Option\;} (d = 5, \rho = 0.40)$", pad=12, fontsize=12)
     plt.xlabel(r"$\mathrm{Basket\; Initial\; Spot\; Price\;} S_{0, i} \;(\$)$")
     plt.ylabel(r"$\mathrm{Option\; Fair\; Value\;} V(\mathbf{S}_0, 0) \;(\$)$")

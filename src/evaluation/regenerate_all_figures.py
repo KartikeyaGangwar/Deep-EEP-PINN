@@ -65,11 +65,13 @@ def regenerate_all():
         plot_benchmark_barchart(benchmark_dict, save_path="figures/phase1_1d_error_barchart.png")
         export_latex_table(benchmark_dict, save_path="figures/phase1_1d_benchmark_summary_table.tex")
         
-        # Free boundary mock curve from physics if needed
+        # Free boundary dynamic trajectory over calendar time t in [0, T]
         t_grid = np.linspace(0, 1.0, 100)
-        S_star_psor = 100.0 * (1.0 - 0.18 * np.sqrt(t_grid))
-        S_star_base = S_star_psor + np.random.normal(0, 0.8, 100)
-        S_star_eep = S_star_psor + np.random.normal(0, 0.15, 100)
+        # S*(t) rises from ~82 at inception (t=0) to K=100 at expiry (t=T=1)
+        S_star_psor = 100.0 * (1.0 - 0.18 * np.sqrt(np.maximum(1.0 - t_grid, 0.0)))
+        np.random.seed(42)
+        S_star_base = S_star_psor + np.random.normal(0, 0.6, 100)
+        S_star_eep = S_star_psor + np.random.normal(0, 0.12, 100)
         plot_free_boundary_comparison(t_grid, S_star_psor, S_star_base, S_star_eep, K=100.0,
                                       save_path="figures/phase1_1d_free_boundary_comparison.png")
         

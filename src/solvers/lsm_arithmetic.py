@@ -1,4 +1,4 @@
-﻿"""
+"""
 Ground Truth Benchmark for American Arithmetic Basket Options (d=5):
 Longstaff-Schwartz Least Squares Monte Carlo (LSM 2001) for Payoff: max(K - sum(w_i S_i), 0).
 
@@ -56,14 +56,14 @@ class LongstaffSchwartzArithmeticSolver:
         B_t = S_t @ self.weights
         return np.maximum(self.K - B_t, 0.0)
 
-    def build_quadratic_basis(self, S_itm: np.ndarray, B_itm: np.ndarray) -> np.ndarray:
+    def build_quadratic_basis(self, S_itm: np.ndarray, B_itm: np.ndarray = None) -> np.ndarray:
         """
-        Constructs full 23-term quadratic basis for arithmetic regression:
-        {1, S_i/K, (S_i/K)^2, (S_i*S_j)/K^2 for i < j, B/K, (B/K)^2}.
+        Constructs full non-redundant 21-term quadratic basis for arithmetic regression (d=5):
+        {1, S_i/K, (S_i/K)^2, (S_i*S_j)/K^2 for i < j}.
+        (B/K and (B/K)^2 are omitted as they are exact linear combinations of the above).
         """
         N_pts = S_itm.shape[0]
         S_norm = S_itm / self.K
-        B_norm = B_itm / self.K
         
         basis = [np.ones(N_pts)]
         
@@ -79,10 +79,6 @@ class LongstaffSchwartzArithmeticSolver:
         for i in range(self.d):
             for j in range(i + 1, self.d):
                 basis.append(S_norm[:, i] * S_norm[:, j])
-                
-        # 4. Arithmetic basket terms (2 terms)
-        basis.append(B_norm)
-        basis.append(B_norm ** 2)
         
         return np.column_stack(basis)
 
@@ -90,10 +86,10 @@ class LongstaffSchwartzArithmeticSolver:
         start_time = time.perf_counter()
         paths = self.simulate_paths(S0)
         
-        # 1. Payoff at maturity T
+        # 1. Payoff at maturity T (step N)
         cash_flows = self.compute_arithmetic_payoff(paths[:, -1, :])
         
-        # 2. Backward Induction
+        # 2. Backward Induction from N-1 down to 1
         for k in range(self.num_steps - 1, 0, -1):
             S_k = paths[:, k, :]
             intrinsic_val = self.compute_arithmetic_payoff(S_k)
@@ -117,9 +113,19 @@ class LongstaffSchwartzArithmeticSolver:
             else:
                 cash_flows = cash_flows * self.df
                 
+        # Discount from t_1 to t_0
         discounted_val = cash_flows * self.df
-        price_estimate = np.mean(discounted_val)
-        std_err = np.std(discounted_val) / np.sqrt(self.num_paths)
+        continuation_0 = np.mean(discounted_val)
+        
+        # Immediate exercise check at t_0 (admissible American/Bermudan option condition)
+        intrinsic_0 = float(self.compute_arithmetic_payoff(paths[:1, 0, :])[0])
+        price_estimate = max(intrinsic_0, float(continuation_0))
+        
+        if intrinsic_0 >= continuation_0:
+            std_err = 0.0
+        else:
+            std_err = float(np.std(discounted_val) / np.sqrt(self.num_paths))
+            
         exec_time = time.perf_counter() - start_time
         
         return price_estimate, std_err, exec_time

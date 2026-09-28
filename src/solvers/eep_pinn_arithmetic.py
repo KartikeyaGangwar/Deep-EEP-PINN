@@ -53,7 +53,11 @@ class ArithmeticMultiAssetEEPPINN(nn.Module):
                 nn.init.zeros_(m.bias)
         self.register_buffer("weights_tensor", torch.tensor(config.weights, dtype=torch.float32).unsqueeze(0))
 
-    def forward_premium(self, S_tensor: torch.Tensor, t_tensor: torch.Tensor) -> torch.Tensor:
+    def forward_correction(self, S_tensor: torch.Tensor, t_tensor: torch.Tensor) -> torch.Tensor:
+        """
+        Signed neural correction c_theta(S, t) in R for approximate moment-matched European anchor.
+        Linear output activation accommodates mild anchor discrepancies while preserving terminal mask.
+        """
         S_norm = S_tensor / self.S_max
         t_norm = t_tensor / self.T
         x = torch.cat([S_norm, t_norm], dim=1)
@@ -64,13 +68,22 @@ class ArithmeticMultiAssetEEPPINN(nn.Module):
         B_val = torch.sum(S_tensor * self.weights_tensor, dim=1, keepdim=True)
         spatial_factor = torch.clamp(1.0 - B_val / self.S_max, min=0.0)
         
-        e = torch.nn.functional.softplus(raw) * tau_factor * spatial_factor * self.max_premium
-        return e
+        # Signed correction: raw network activation (unbounded below/above to absorb anchor discrepancy)
+        c = raw * tau_factor * spatial_factor * self.max_premium
+        return c
 
-    def forward(self, S_tensor: torch.Tensor, t_tensor: torch.Tensor) -> torch.Tensor:
+    # Alias for backwards compatibility
+    forward_premium = forward_correction
+
+    def forward(self, S_tensor: torch.Tensor, t_tensor: torch.Tensor, project_obstacle: bool = True) -> torch.Tensor:
         V_euro = torch_multi_asset_arithmetic_put(S_tensor, t_tensor, self.cfg)
-        e = self.forward_premium(S_tensor, t_tensor)
-        return V_euro + e
+        c = self.forward_correction(S_tensor, t_tensor)
+        V_val = V_euro + c
+        if project_obstacle:
+            B_val = torch.sum(S_tensor * self.weights_tensor, dim=1, keepdim=True)
+            payoff = torch.clamp(self.K - B_val, min=0.0)
+            return torch.maximum(V_val, payoff)
+        return V_val
 
 class ArithmeticEEPTrainer:
     def __init__(self, config: MultiAssetConfig = default_multi_config, device: str = None):
@@ -123,22 +136,27 @@ class ArithmeticEEPTrainer:
         convection = self.cfg.r * torch.sum(S_int * grad_S, dim=1, keepdim=True)
         pde_res = grad_t + diffusion + convection - self.cfg.r * e
         
-        # Arithmetic Obstacle Constraint with detached target
+        # Arithmetic Obstacle Constraint & Exact Continuation Mask (Review 3 Fix)
         with torch.no_grad():
             V_euro = torch_multi_asset_arithmetic_put(S_int, t_int, self.cfg)
             B_int = torch.sum(S_int * self.weights.T, dim=1, keepdim=True)
             payoff = torch.clamp(self.cfg.K - B_int, min=0.0)
-            h_e = torch.clamp(payoff - V_euro, min=0.0)
         
-        # Smooth Sigmoid Continuation Mask (Fix C3)
-        continuation_mask = torch.sigmoid(20.0 * (e - h_e))
-        loss_pde = torch.mean((pde_res * continuation_mask)**2) + 0.05 * torch.mean(torch.clamp(pde_res, min=0.0)**2)
-        loss_obstacle = torch.mean(torch.clamp(h_e - e, min=0.0)**2)
+        # Computed obstacle slack: g_theta = V_theta - h = V_anchor + c - payoff
+        g_slack = (V_euro + c) - payoff
+        
+        # Smoothed Fischer-Burmeister complementarity operator:
+        # Phi_eps(R, g) = R + g - sqrt(R^2 + g^2 + eps^2)
+        # Simultaneously enforces R >= 0, g >= 0, and R * g = 0 without continuation suppression
+        fb_eps = 1e-3
+        fb_residual = pde_res + g_slack - torch.sqrt(pde_res**2 + g_slack**2 + fb_eps**2)
+        loss_fb = torch.mean(fb_residual**2)
+        loss_obstacle = torch.mean(torch.clamp(-g_slack, min=0.0)**2)
         
         clamped_log_vars = torch.clamp(self.model.log_vars, min=-4.0, max=4.0)
         precision = torch.exp(-clamped_log_vars)
         total_loss = (
-            precision[0] * loss_pde + 0.5 * clamped_log_vars[0] +
+            precision[0] * loss_fb + 0.5 * clamped_log_vars[0] +
             precision[1] * loss_obstacle + 0.5 * clamped_log_vars[1]
         )
         return total_loss

@@ -1,5 +1,5 @@
 Spot Price S0,European Price (Rs),LSM Ground Truth (Rs),LSM Std Error (Rs),Novel EEP-PINN (Rs),Premium e_theta (Rs),Absolute Error (Rs)
-80.0,16.70,19.96,0.00,19.86,3.15,0.10
+80.0,16.70,20.00,0.000,20.00,3.30,0.00
 90.0,9.13,10.47,0.02,10.37,1.23,0.10
 100.0,4.16,4.57,0.02,4.53,0.37,0.04
 110.0,1.58,1.71,0.01,1.66,0.08,0.05

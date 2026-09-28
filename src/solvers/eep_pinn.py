@@ -77,10 +77,14 @@ class EarlyExercisePremiumNet(nn.Module):
         e = torch.nn.functional.softplus(raw) * tau_factor * spatial_factor * self.max_premium
         return e
 
-    def forward(self, S_tensor: torch.Tensor, t_tensor: torch.Tensor) -> torch.Tensor:
+    def forward(self, S_tensor: torch.Tensor, t_tensor: torch.Tensor, project_obstacle: bool = True) -> torch.Tensor:
         V_euro = torch_black_scholes_put(S_tensor, t_tensor, self.K, self.T, self.r, self.cfg.sigma)
         e = self.forward_premium(S_tensor, t_tensor)
-        return V_euro + e
+        V_val = V_euro + e
+        if project_obstacle:
+            payoff = torch.clamp(self.K - S_tensor, min=0.0)
+            return torch.maximum(V_val, payoff)
+        return V_val
 
     def get_adaptive_weights(self):
         with torch.no_grad():
@@ -127,17 +131,18 @@ class EEPPINNTrainer:
         # Black-Scholes PDE Residual on Premium: L_BS(e) = 0
         pde_res = de_dt + 0.5 * (self.sigma**2) * (S_int**2) * d2e_dS2 + self.r * S_int * de_dS - self.r * e
         
-        # 2. American Obstacle Constraint on Premium
-        # Target obstacle value is detached from autograd graph
+        # 2. American Obstacle Constraint & Exact Continuation Mask (Review 3 Fix)
         with torch.no_grad():
             V_euro_int = torch_black_scholes_put(S_int, t_int, self.K, self.T, self.r, self.sigma)
             payoff_int = torch.clamp(self.K - S_int, min=0.0)
-            h_e = torch.clamp(payoff_int - V_euro_int, min=0.0)
         
-        # Smooth Differentiable Continuation Mask (Fix C3)
-        continuation_mask = torch.sigmoid(20.0 * (e - h_e))
+        # Exact obstacle slack: g_theta = V_theta - h = V_anchor + e - payoff
+        g_slack = (V_euro_int + e) - payoff_int
+        
+        # Dimensionless continuation mask: normalized by strike K
+        continuation_mask = torch.sigmoid(50.0 * (g_slack / self.K - 0.08))
         loss_pde = torch.mean((pde_res * continuation_mask)**2) + 0.05 * torch.mean(torch.clamp(pde_res, min=0.0)**2)
-        loss_obstacle = torch.mean(torch.clamp(h_e - e, min=0.0)**2)
+        loss_obstacle = torch.mean(torch.clamp(-g_slack, min=0.0)**2)
         
         # 3. Near-field Boundary Condition at S = 0
         N_bc = 400

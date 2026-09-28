@@ -69,10 +69,10 @@ def plot_free_boundary_comparison(t_grid, S_star_psor, S_star_base, S_star_eep, 
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     plt.figure(figsize=(9.5, 5.5))
     
-    plt.plot(t_grid, S_star_psor, "k-", linewidth=3.0, label=r"$\mathrm{Crank-Nicolson\; PSOR\; (Ground\; Truth)}$")
+    plt.plot(t_grid, S_star_psor, "k-", linewidth=3.0, label=r"$\mathrm{Crank\text{--}Nicolson\; PSOR\; (Reference)}$")
     plt.plot(t_grid, S_star_base, "r:", linewidth=2.2, label=r"$\mathrm{Baseline\; Penalty\; PINN}$")
-    plt.plot(t_grid, S_star_eep, "b--", linewidth=2.5, label=r"$\mathrm{Novel\; EEP-PINN\; (Decomposition)}$")
-    plt.axhline(y=K, color="gray", linestyle="--", alpha=0.7, label=r"$\mathrm{Strike\; Price\;} K = 100\$")
+    plt.plot(t_grid, S_star_eep, "b--", linewidth=2.5, label=r"$\mathrm{Deep\text{-}EEP\text{-}PINN\; (Proposed)}$")
+    plt.axhline(y=K, color="gray", linestyle="--", alpha=0.7, label=r"$\mathrm{Strike\; Price\;} K = 100$")
     
     plt.fill_between(t_grid, 0, S_star_psor, color="red", alpha=0.08, label=r"$\mathrm{Stopping\; Region\; (Early\; Exercise)}$")
     plt.fill_between(t_grid, S_star_psor, 150, color="blue", alpha=0.05, label=r"$\mathrm{Continuation\; Region\; (Hold)}$")

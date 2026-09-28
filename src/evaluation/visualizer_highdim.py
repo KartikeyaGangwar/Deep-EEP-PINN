@@ -31,17 +31,17 @@ def plot_highdim_pricing_comparison(dim, spot_levels, euro_prices, lsm_prices, l
     
     spots = np.array(spot_levels)
     corr_pairs = dim * (dim - 1) // 2
-    market_name = "Dow Jones Industrial Average (DJIA 30)" if dim == 30 else ("Nifty 50 / Euro Stoxx 50" if dim == 50 else f"{dim}-Asset Basket")
+    market_name = "Dow\\; Jones\\; (d=30)" if dim == 30 else ("Nifty\\; 50\\; Benchmark" if dim == 50 else f"{dim}\\text{{-}}Asset\\; Basket")
     
     plt.plot(spots, euro_prices, "g--", linewidth=2.0, label=r"$\mathrm{European\; Basket\; (Exact\;} V_{\mathrm{Euro}}\mathrm{)}$")
     plt.errorbar(spots, lsm_prices, yerr=1.96*np.array(lsm_errors), fmt="ko", capsize=5, capthick=1.5,
-                 markersize=6, label=r"$\mathrm{LSM\; Monte\; Carlo\; (100k\; paths} \pm 1.96\mathrm{SE)}$")
-    plt.plot(spots, eep_prices, "b-^", linewidth=2.5, markersize=7, label=rf"$\mathrm{{Novel\; {dim}D\; EEP-PINN\;}} (V_{{\mathrm{{Euro}}}} + e_\theta)$")
+                 markersize=6, label=r"$\mathrm{LSM\; Reference\; (100k\; paths} \pm 1.96\mathrm{SE)}$")
+    plt.plot(spots, eep_prices, "b-^", linewidth=2.5, markersize=7, label=rf"$\mathrm{{Deep\text{{-}}EEP\text{{-}}PINN\;}} (V_{{\mathrm{{Euro}}}} + e_\theta)$")
     
     plt.fill_between(spots, euro_prices, eep_prices, color="purple", alpha=0.12, label=r"$\mathrm{Early\; Exercise\; Premium\;} e(\mathbf{S}, t)$")
     
-    plt.axvline(x=100.0, color="gray", linestyle=":", alpha=0.7, label=r"$\mathrm{Strike\;} K = 100\$")
-    plt.title(rf"$\mathbf{{Scalability\; Suite:\; {dim}-Asset\; {market_name}\;}} (d = {dim}, \, {corr_pairs}\; \mathrm{{Pairs}})$", pad=12, fontsize=12)
+    plt.axvline(x=100.0, color="gray", linestyle=":", alpha=0.7, label=r"$\mathrm{Strike\;} K = 100$")
+    plt.title(rf"$\mathbf{{Scalability\; Suite:\; {dim}\text{{-}}Asset\; {market_name}\;}} (d = {dim}, \, {corr_pairs}\; \mathrm{{Pairs}})$", pad=12, fontsize=12)
     plt.xlabel(r"$\mathrm{Basket\; Initial\; Spot\; Price\;} S_{0, i} \;(\$)$")
     plt.ylabel(r"$\mathrm{Option\; Fair\; Value\;} V(\mathbf{S}_0, 0) \;(\$)$")
     plt.grid(True, alpha=0.3, linestyle="--")
