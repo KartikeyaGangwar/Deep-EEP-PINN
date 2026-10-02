@@ -4,6 +4,8 @@
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-ee4c2c.svg)](https://pytorch.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Kaggle: GPU P100](https://img.shields.io/badge/Hardware-Tesla%20P100%20Verified-brightgreen.svg)]()
+[![Open Science: Zenodo](https://img.shields.io/badge/Preprint-Open%20Access%20(Zenodo)-024dad.svg)](https://zenodo.org/)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.Deep--EEP--PINN-blue.svg)](https://zenodo.org/)
 
 A mesh-free scientific machine learning framework for high-dimensional American basket option free-boundary partial differential equations ($d=1, 5, 10, 30, 50$).
 
@@ -179,6 +181,7 @@ python src/evaluation/regenerate_all_figures.py
 * **Email:** [kartikeyagangwar@proton.me](mailto:kartikeyagangwar@proton.me)
 * **ORCID:** [https://orcid.org/0009-0009-1973-7532](https://orcid.org/0009-0009-1973-7532)
 * **Repository:** [https://github.com/KartikeyaGangwar/Deep-EEP-PINN](https://github.com/KartikeyaGangwar/Deep-EEP-PINN)
+* **Open Science / Preprint Archive:** Permanent citable open-access preprint and code archive hosted on CERN Zenodo (Green Open Access — 100% free and paywall-free for the research community).
 
 ```bibtex
 @article{gangwar2026deep,

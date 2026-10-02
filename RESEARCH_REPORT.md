@@ -248,6 +248,7 @@ Therefore, $\mathbf{e_\theta(\mathbf{S}, T) \equiv 0}$ strictly by mathematical 
 * **Email:** [kartikeyagangwar@proton.me](mailto:kartikeyagangwar@proton.me)
 * **ORCID:** [https://orcid.org/0009-0009-1973-7532](https://orcid.org/0009-0009-1973-7532)
 * **Repository:** [https://github.com/KartikeyaGangwar/Deep-EEP-PINN](https://github.com/KartikeyaGangwar/Deep-EEP-PINN)
+* **Open Science / Preprint Archive:** Permanent citable open-access preprint archive on CERN Zenodo (Green Open Access — freely available globally without paywalls).
 
 ```bibtex
 @article{gangwar2026deep,
